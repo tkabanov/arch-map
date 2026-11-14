@@ -1,0 +1,2111 @@
+{
+  "$schema": "../schema/spec.schema.json",
+  "edges": [
+    {
+      "channel": "call",
+      "facets": {
+        "nest.di": {
+          "param": "service",
+          "type": "BookService"
+        }
+      },
+      "from": "library.api.books.book_module.book_controller",
+      "fromMethod": "create",
+      "id": "library.api.books.book_module.book_controller#create>library.api.books.book_module.book_service#create:call",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/books/books.ts",
+        "line": 15,
+        "repo": "api"
+      },
+      "to": "library.api.books.book_module.book_service",
+      "toMethod": "create"
+    },
+    {
+      "channel": "call",
+      "facets": {
+        "nest.di": {
+          "param": "service",
+          "type": "BookService"
+        }
+      },
+      "from": "library.api.books.book_module.book_controller",
+      "fromMethod": "list",
+      "id": "library.api.books.book_module.book_controller#list>library.api.books.book_module.book_service#list:call",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/books/books.ts",
+        "line": 14,
+        "repo": "api"
+      },
+      "to": "library.api.books.book_module.book_service",
+      "toMethod": "list"
+    },
+    {
+      "channel": "write",
+      "from": "library.api.books.book_module.book_service",
+      "fromMethod": "create",
+      "id": "library.api.books.book_module.book_service#create>library.db.books:write",
+      "ops": [
+        "create"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/books/books.ts",
+        "line": 9,
+        "repo": "api"
+      },
+      "to": "library.db.books"
+    },
+    {
+      "channel": "read",
+      "from": "library.api.books.book_module.book_service",
+      "fromMethod": "list",
+      "id": "library.api.books.book_module.book_service#list>library.db.books:read",
+      "ops": [
+        "findAll"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/books/books.ts",
+        "line": 8,
+        "repo": "api"
+      },
+      "to": "library.db.books"
+    },
+    {
+      "channel": "call",
+      "facets": {
+        "nest.di": {
+          "param": "service",
+          "type": "BranchService"
+        }
+      },
+      "from": "library.api.branches.branch_module.branch_controller",
+      "fromMethod": "create",
+      "id": "library.api.branches.branch_module.branch_controller#create>library.api.branches.branch_module.branch_service#create:call",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/branches/branches.ts",
+        "line": 16,
+        "repo": "api"
+      },
+      "to": "library.api.branches.branch_module.branch_service",
+      "toMethod": "create"
+    },
+    {
+      "channel": "call",
+      "facets": {
+        "nest.di": {
+          "param": "service",
+          "type": "BranchService"
+        }
+      },
+      "from": "library.api.branches.branch_module.branch_controller",
+      "fromMethod": "list",
+      "id": "library.api.branches.branch_module.branch_controller#list>library.api.branches.branch_module.branch_service#list:call",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/branches/branches.ts",
+        "line": 15,
+        "repo": "api"
+      },
+      "to": "library.api.branches.branch_module.branch_service",
+      "toMethod": "list"
+    },
+    {
+      "channel": "write",
+      "from": "library.api.branches.branch_module.branch_service",
+      "fromMethod": "create",
+      "id": "library.api.branches.branch_module.branch_service#create>library.db.branches:write",
+      "ops": [
+        "create"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/branches/branches.ts",
+        "line": 10,
+        "repo": "api"
+      },
+      "to": "library.db.branches"
+    },
+    {
+      "channel": "read",
+      "from": "library.api.branches.branch_module.branch_service",
+      "fromMethod": "list",
+      "id": "library.api.branches.branch_module.branch_service#list>library.db.branches:read",
+      "ops": [
+        "findAll"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/branches/branches.ts",
+        "line": 9,
+        "repo": "api"
+      },
+      "to": "library.db.branches"
+    },
+    {
+      "channel": "https",
+      "facets": {
+        "config.external": {
+          "client": "CatalogGateway",
+          "technology": "HTTPS"
+        }
+      },
+      "from": "library.api.branches.branch_module.branch_service",
+      "fromMethod": "list",
+      "id": "library.api.branches.branch_module.branch_service#list>library.ext.catalog:https",
+      "label": "Catalog lookup",
+      "ops": [
+        "lookup"
+      ],
+      "provenance": "declared",
+      "sites": [
+        {
+          "file": "src/modules/branches/branches.ts",
+          "line": 9,
+          "repo": "api"
+        }
+      ],
+      "source": {
+        "config": "examples/library-nest/config.ts#EXTERNAL_CLIENTS.CatalogGateway"
+      },
+      "to": "library.ext.catalog"
+    },
+    {
+      "channel": "event",
+      "facets": {
+        "nest.event": {
+          "decorator": "OnDomainEvent",
+          "event": "LoanOpened",
+          "handler": "LoanAuditService.record",
+          "name": "loan.opened"
+        }
+      },
+      "from": "library.api.bus.library_bus",
+      "fromMethod": "LoanOpened",
+      "id": "library.api.bus.library_bus#LoanOpened>library.api.loans.loan_audit_module.loan_audit_service#record:event",
+      "label": "loan.opened",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/loans/loan-audit.ts",
+        "line": 10,
+        "repo": "api"
+      },
+      "to": "library.api.loans.loan_audit_module.loan_audit_service",
+      "toMethod": "record"
+    },
+    {
+      "channel": "event",
+      "facets": {
+        "nest.event": {
+          "decorator": "OnDomainEvent",
+          "event": "LoanOpened",
+          "handler": "NotificationService.onLoan",
+          "name": "loan.opened"
+        }
+      },
+      "from": "library.api.bus.library_bus",
+      "fromMethod": "LoanOpened",
+      "id": "library.api.bus.library_bus#LoanOpened>library.api.notifications.notification_module.notification_service#onLoan:event",
+      "label": "loan.opened",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/notifications/notifications.ts",
+        "line": 8,
+        "repo": "api"
+      },
+      "to": "library.api.notifications.notification_module.notification_service",
+      "toMethod": "onLoan"
+    },
+    {
+      "channel": "write",
+      "from": "library.api.loans.loan_audit_module.loan_audit_service",
+      "fromMethod": "record",
+      "id": "library.api.loans.loan_audit_module.loan_audit_service#record>library.db.notices:write",
+      "ops": [
+        "create"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/loans/loan-audit.ts",
+        "line": 11,
+        "repo": "api"
+      },
+      "to": "library.db.notices"
+    },
+    {
+      "channel": "call",
+      "facets": {
+        "nest.di": {
+          "param": "service",
+          "type": "LoanService"
+        }
+      },
+      "from": "library.api.loans.loan_module.loan_controller",
+      "fromMethod": "create",
+      "id": "library.api.loans.loan_module.loan_controller#create>library.api.loans.loan_module.loan_service#create:call",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/loans/loans.ts",
+        "line": 16,
+        "repo": "api"
+      },
+      "to": "library.api.loans.loan_module.loan_service",
+      "toMethod": "create"
+    },
+    {
+      "channel": "call",
+      "facets": {
+        "nest.di": {
+          "param": "service",
+          "type": "LoanService"
+        }
+      },
+      "from": "library.api.loans.loan_module.loan_controller",
+      "fromMethod": "list",
+      "id": "library.api.loans.loan_module.loan_controller#list>library.api.loans.loan_module.loan_service#list:call",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/loans/loans.ts",
+        "line": 15,
+        "repo": "api"
+      },
+      "to": "library.api.loans.loan_module.loan_service",
+      "toMethod": "list"
+    },
+    {
+      "channel": "event",
+      "facets": {
+        "nest.event": {
+          "decorator": "OnDomainEvent",
+          "event": "LoanOpened",
+          "name": "loan.opened"
+        }
+      },
+      "from": "library.api.loans.loan_module.loan_service",
+      "fromMethod": "create",
+      "id": "library.api.loans.loan_module.loan_service#create>library.api.bus.library_bus#LoanOpened:event",
+      "label": "loan.opened",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/loans/loans.ts",
+        "line": 10,
+        "repo": "api"
+      },
+      "to": "library.api.bus.library_bus",
+      "toMethod": "LoanOpened"
+    },
+    {
+      "channel": "write",
+      "from": "library.api.loans.loan_module.loan_service",
+      "fromMethod": "create",
+      "id": "library.api.loans.loan_module.loan_service#create>library.db.loans:write",
+      "ops": [
+        "create"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/loans/loans.ts",
+        "line": 10,
+        "repo": "api"
+      },
+      "to": "library.db.loans"
+    },
+    {
+      "channel": "read",
+      "from": "library.api.loans.loan_module.loan_service",
+      "fromMethod": "list",
+      "id": "library.api.loans.loan_module.loan_service#list>library.db.loans:read",
+      "ops": [
+        "findAll"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/loans/loans.ts",
+        "line": 9,
+        "repo": "api"
+      },
+      "to": "library.db.loans"
+    },
+    {
+      "channel": "call",
+      "facets": {
+        "nest.di": {
+          "param": "service",
+          "type": "MemberService"
+        }
+      },
+      "from": "library.api.members.member_module.member_controller",
+      "fromMethod": "create",
+      "id": "library.api.members.member_module.member_controller#create>library.api.members.member_module.member_service#create:call",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/members/members.ts",
+        "line": 15,
+        "repo": "api"
+      },
+      "to": "library.api.members.member_module.member_service",
+      "toMethod": "create"
+    },
+    {
+      "channel": "call",
+      "facets": {
+        "nest.di": {
+          "param": "service",
+          "type": "MemberService"
+        }
+      },
+      "from": "library.api.members.member_module.member_controller",
+      "fromMethod": "list",
+      "id": "library.api.members.member_module.member_controller#list>library.api.members.member_module.member_service#list:call",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/members/members.ts",
+        "line": 14,
+        "repo": "api"
+      },
+      "to": "library.api.members.member_module.member_service",
+      "toMethod": "list"
+    },
+    {
+      "channel": "write",
+      "from": "library.api.members.member_module.member_service",
+      "fromMethod": "create",
+      "id": "library.api.members.member_module.member_service#create>library.db.members:write",
+      "ops": [
+        "create"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/members/members.ts",
+        "line": 9,
+        "repo": "api"
+      },
+      "to": "library.db.members"
+    },
+    {
+      "channel": "read",
+      "from": "library.api.members.member_module.member_service",
+      "fromMethod": "list",
+      "id": "library.api.members.member_module.member_service#list>library.db.members:read",
+      "ops": [
+        "findAll"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/members/members.ts",
+        "line": 8,
+        "repo": "api"
+      },
+      "to": "library.db.members"
+    },
+    {
+      "channel": "call",
+      "facets": {
+        "nest.di": {
+          "param": "service",
+          "type": "NoticeService"
+        }
+      },
+      "from": "library.api.notices.notice_module.notice_controller",
+      "fromMethod": "create",
+      "id": "library.api.notices.notice_module.notice_controller#create>library.api.notices.notice_module.notice_service#create:call",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/notices/notices.ts",
+        "line": 15,
+        "repo": "api"
+      },
+      "to": "library.api.notices.notice_module.notice_service",
+      "toMethod": "create"
+    },
+    {
+      "channel": "call",
+      "facets": {
+        "nest.di": {
+          "param": "service",
+          "type": "NoticeService"
+        }
+      },
+      "from": "library.api.notices.notice_module.notice_controller",
+      "fromMethod": "list",
+      "id": "library.api.notices.notice_module.notice_controller#list>library.api.notices.notice_module.notice_service#list:call",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/notices/notices.ts",
+        "line": 14,
+        "repo": "api"
+      },
+      "to": "library.api.notices.notice_module.notice_service",
+      "toMethod": "list"
+    },
+    {
+      "channel": "write",
+      "from": "library.api.notices.notice_module.notice_service",
+      "fromMethod": "create",
+      "id": "library.api.notices.notice_module.notice_service#create>library.db.notices:write",
+      "ops": [
+        "create"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/notices/notices.ts",
+        "line": 9,
+        "repo": "api"
+      },
+      "to": "library.db.notices"
+    },
+    {
+      "channel": "read",
+      "from": "library.api.notices.notice_module.notice_service",
+      "fromMethod": "list",
+      "id": "library.api.notices.notice_module.notice_service#list>library.db.notices:read",
+      "ops": [
+        "findAll"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/notices/notices.ts",
+        "line": 8,
+        "repo": "api"
+      },
+      "to": "library.db.notices"
+    },
+    {
+      "channel": "smtp",
+      "facets": {
+        "config.external": {
+          "client": "EmailGateway",
+          "technology": "SMTP"
+        }
+      },
+      "from": "library.api.notifications.notification_module.notification_service",
+      "fromMethod": "onLoan",
+      "id": "library.api.notifications.notification_module.notification_service#onLoan>library.ext.email:smtp",
+      "label": "Loan notices",
+      "ops": [
+        "send"
+      ],
+      "provenance": "declared",
+      "sites": [
+        {
+          "file": "src/modules/notifications/notifications.ts",
+          "line": 9,
+          "repo": "api"
+        }
+      ],
+      "source": {
+        "config": "examples/library-nest/config.ts#EXTERNAL_CLIENTS.EmailGateway"
+      },
+      "to": "library.ext.email"
+    },
+    {
+      "channel": "call",
+      "facets": {
+        "nest.di": {
+          "param": "service",
+          "type": "ReservationService"
+        }
+      },
+      "from": "library.api.reservations.reservation_module.reservation_controller",
+      "fromMethod": "create",
+      "id": "library.api.reservations.reservation_module.reservation_controller#create>library.api.reservations.reservation_module.reservation_service#create:call",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/reservations/reservations.ts",
+        "line": 15,
+        "repo": "api"
+      },
+      "to": "library.api.reservations.reservation_module.reservation_service",
+      "toMethod": "create"
+    },
+    {
+      "channel": "call",
+      "facets": {
+        "nest.di": {
+          "param": "service",
+          "type": "ReservationService"
+        }
+      },
+      "from": "library.api.reservations.reservation_module.reservation_controller",
+      "fromMethod": "list",
+      "id": "library.api.reservations.reservation_module.reservation_controller#list>library.api.reservations.reservation_module.reservation_service#list:call",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/reservations/reservations.ts",
+        "line": 14,
+        "repo": "api"
+      },
+      "to": "library.api.reservations.reservation_module.reservation_service",
+      "toMethod": "list"
+    },
+    {
+      "channel": "write",
+      "from": "library.api.reservations.reservation_module.reservation_service",
+      "fromMethod": "create",
+      "id": "library.api.reservations.reservation_module.reservation_service#create>library.db.reservations:write",
+      "ops": [
+        "create"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/reservations/reservations.ts",
+        "line": 9,
+        "repo": "api"
+      },
+      "to": "library.db.reservations"
+    },
+    {
+      "channel": "read",
+      "from": "library.api.reservations.reservation_module.reservation_service",
+      "fromMethod": "list",
+      "id": "library.api.reservations.reservation_module.reservation_service#list>library.db.reservations:read",
+      "ops": [
+        "findAll"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/reservations/reservations.ts",
+        "line": 8,
+        "repo": "api"
+      },
+      "to": "library.db.reservations"
+    },
+    {
+      "channel": "references",
+      "facets": {
+        "sequelize.fk": {
+          "fields": [
+            {
+              "field": "referenceId",
+              "rel": "ForeignKey"
+            }
+          ]
+        }
+      },
+      "from": "library.db.loans",
+      "id": "library.db.loans>library.db.books:references",
+      "ops": [
+        "referenceId"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "src/models/loans.ts",
+        "line": 7,
+        "repo": "api"
+      },
+      "to": "library.db.books"
+    },
+    {
+      "channel": "references",
+      "facets": {
+        "sequelize.fk": {
+          "fields": [
+            {
+              "field": "referenceId",
+              "rel": "ForeignKey"
+            }
+          ]
+        }
+      },
+      "from": "library.db.notices",
+      "id": "library.db.notices>library.db.loans:references",
+      "ops": [
+        "referenceId"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "src/models/notices.ts",
+        "line": 7,
+        "repo": "api"
+      },
+      "to": "library.db.loans"
+    },
+    {
+      "channel": "references",
+      "facets": {
+        "sequelize.fk": {
+          "fields": [
+            {
+              "field": "referenceId",
+              "rel": "ForeignKey"
+            }
+          ]
+        }
+      },
+      "from": "library.db.reservations",
+      "id": "library.db.reservations>library.db.members:references",
+      "ops": [
+        "referenceId"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "src/models/reservations.ts",
+        "line": 7,
+        "repo": "api"
+      },
+      "to": "library.db.members"
+    },
+    {
+      "channel": "webhook",
+      "from": "library.ext.catalog",
+      "id": "library.ext.catalog>library.api.books.book_module.book_controller.post_books:webhook",
+      "label": "New catalog entry",
+      "provenance": "declared",
+      "sites": [
+        {
+          "file": "src/modules/books/books.ts",
+          "line": 15,
+          "repo": "api"
+        }
+      ],
+      "source": {
+        "config": "examples/library-nest/config.ts#INBOUND.library.ext.catalog.create"
+      },
+      "to": "library.api.books.book_module.book_controller.post_books"
+    },
+    {
+      "channel": "rest",
+      "from": "library.web.catalog.api",
+      "id": "library.web.catalog.api>library.api.books.book_module.book_controller.get_books:rest",
+      "label": "GET /books",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/catalog/api.ts",
+        "line": 1,
+        "repo": "web"
+      },
+      "to": "library.api.books.book_module.book_controller.get_books"
+    },
+    {
+      "channel": "rest",
+      "from": "library.web.catalog.api",
+      "id": "library.web.catalog.api>library.api.loans.loan_module.loan_controller.post_loans:rest",
+      "label": "POST /loans",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/catalog/api.ts",
+        "line": 2,
+        "repo": "web"
+      },
+      "to": "library.api.loans.loan_module.loan_controller.post_loans"
+    },
+    {
+      "channel": "rest",
+      "from": "library.web.catalog.api",
+      "id": "library.web.catalog.api>library.api.reservations.reservation_module.reservation_controller.post_reservations:rest",
+      "label": "POST /reservations",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/catalog/api.ts",
+        "line": 3,
+        "repo": "web"
+      },
+      "to": "library.api.reservations.reservation_module.reservation_controller.post_reservations"
+    },
+    {
+      "channel": "import",
+      "from": "library.web.catalog.catalog",
+      "id": "library.web.catalog.catalog>library.web.catalog.api:import",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/catalog/Catalog.vue",
+        "line": 2,
+        "repo": "web"
+      },
+      "to": "library.web.catalog.api"
+    }
+  ],
+  "elements": [
+    {
+      "description": "Catalog, circulation and reminders.",
+      "facets": {
+        "nest.app": {}
+      },
+      "id": "library.api",
+      "name": "Library API",
+      "parent": null,
+      "provenance": "extracted",
+      "source": {
+        "file": "package.json",
+        "line": 1,
+        "repo": "api"
+      },
+      "technology": "NestJS, Sequelize",
+      "tier": "service",
+      "type": "app"
+    },
+    {
+      "confidence": "high",
+      "derivedFrom": {
+        "rule": "folder",
+        "value": "src/modules/books"
+      },
+      "description": "Folder src/modules/books.",
+      "id": "library.api.books",
+      "name": "books",
+      "parent": "library.api",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/books/books.ts",
+        "line": 17,
+        "repo": "api"
+      },
+      "type": "module"
+    },
+    {
+      "facets": {
+        "nest.module": {}
+      },
+      "id": "library.api.books.book_module",
+      "name": "BookModule",
+      "parent": "library.api.books",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/books/books.ts",
+        "line": 17,
+        "repo": "api"
+      },
+      "type": "module"
+    },
+    {
+      "facets": {
+        "nest.controller": {
+          "prefix": "/books"
+        }
+      },
+      "id": "library.api.books.book_module.book_controller",
+      "methods": [
+        {
+          "line": 15,
+          "name": "create"
+        },
+        {
+          "line": 14,
+          "name": "list"
+        }
+      ],
+      "name": "BookController",
+      "parent": "library.api.books.book_module",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/books/books.ts",
+        "line": 11,
+        "repo": "api"
+      },
+      "type": "component"
+    },
+    {
+      "access": {
+        "level": "authenticated"
+      },
+      "contract": {
+        "doc": "contracts/library.openapi.json",
+        "operationId": "BookController_list"
+      },
+      "facets": {
+        "nest.route": {
+          "auth": "jwt"
+        }
+      },
+      "handler": "list",
+      "http": {
+        "method": "GET",
+        "path": "/books"
+      },
+      "id": "library.api.books.book_module.book_controller.get_books",
+      "name": "GET /books",
+      "parent": "library.api.books.book_module.book_controller",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/books/books.ts",
+        "line": 14,
+        "repo": "api"
+      },
+      "type": "endpoint"
+    },
+    {
+      "access": {
+        "level": "authenticated"
+      },
+      "contract": {
+        "doc": "contracts/library.openapi.json",
+        "operationId": "BookController_create"
+      },
+      "facets": {
+        "nest.route": {
+          "auth": "jwt"
+        }
+      },
+      "handler": "create",
+      "http": {
+        "method": "POST",
+        "path": "/books"
+      },
+      "id": "library.api.books.book_module.book_controller.post_books",
+      "name": "POST /books",
+      "parent": "library.api.books.book_module.book_controller",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/books/books.ts",
+        "line": 15,
+        "repo": "api"
+      },
+      "type": "endpoint"
+    },
+    {
+      "facets": {
+        "nest.service": {}
+      },
+      "id": "library.api.books.book_module.book_service",
+      "methods": [
+        {
+          "line": 9,
+          "name": "create"
+        },
+        {
+          "line": 8,
+          "name": "list"
+        }
+      ],
+      "name": "BookService",
+      "parent": "library.api.books.book_module",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/books/books.ts",
+        "line": 5,
+        "repo": "api"
+      },
+      "type": "component"
+    },
+    {
+      "confidence": "high",
+      "derivedFrom": {
+        "rule": "folder",
+        "value": "src/modules/branches"
+      },
+      "description": "Folder src/modules/branches.",
+      "id": "library.api.branches",
+      "name": "branches",
+      "parent": "library.api",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/branches/branches.ts",
+        "line": 18,
+        "repo": "api"
+      },
+      "type": "module"
+    },
+    {
+      "facets": {
+        "nest.module": {}
+      },
+      "id": "library.api.branches.branch_module",
+      "name": "BranchModule",
+      "parent": "library.api.branches",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/branches/branches.ts",
+        "line": 18,
+        "repo": "api"
+      },
+      "type": "module"
+    },
+    {
+      "facets": {
+        "nest.controller": {
+          "prefix": "/branches"
+        }
+      },
+      "id": "library.api.branches.branch_module.branch_controller",
+      "methods": [
+        {
+          "line": 16,
+          "name": "create"
+        },
+        {
+          "line": 15,
+          "name": "list"
+        }
+      ],
+      "name": "BranchController",
+      "parent": "library.api.branches.branch_module",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/branches/branches.ts",
+        "line": 12,
+        "repo": "api"
+      },
+      "type": "component"
+    },
+    {
+      "access": {
+        "level": "authenticated"
+      },
+      "contract": {
+        "doc": "contracts/library.openapi.json",
+        "operationId": "BranchController_list"
+      },
+      "facets": {
+        "nest.route": {
+          "auth": "jwt"
+        }
+      },
+      "handler": "list",
+      "http": {
+        "method": "GET",
+        "path": "/branches"
+      },
+      "id": "library.api.branches.branch_module.branch_controller.get_branches",
+      "name": "GET /branches",
+      "parent": "library.api.branches.branch_module.branch_controller",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/branches/branches.ts",
+        "line": 15,
+        "repo": "api"
+      },
+      "type": "endpoint"
+    },
+    {
+      "access": {
+        "level": "authenticated"
+      },
+      "contract": {
+        "doc": "contracts/library.openapi.json",
+        "operationId": "BranchController_create"
+      },
+      "facets": {
+        "nest.route": {
+          "auth": "jwt"
+        }
+      },
+      "handler": "create",
+      "http": {
+        "method": "POST",
+        "path": "/branches"
+      },
+      "id": "library.api.branches.branch_module.branch_controller.post_branches",
+      "name": "POST /branches",
+      "parent": "library.api.branches.branch_module.branch_controller",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/branches/branches.ts",
+        "line": 16,
+        "repo": "api"
+      },
+      "type": "endpoint"
+    },
+    {
+      "facets": {
+        "nest.service": {}
+      },
+      "id": "library.api.branches.branch_module.branch_service",
+      "methods": [
+        {
+          "line": 10,
+          "name": "create"
+        },
+        {
+          "line": 9,
+          "name": "list"
+        }
+      ],
+      "name": "BranchService",
+      "parent": "library.api.branches.branch_module",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/branches/branches.ts",
+        "line": 6,
+        "repo": "api"
+      },
+      "type": "component"
+    },
+    {
+      "description": "In-process domain events: `publish(new XEvent())` reaches every `@OnDomainEvent` handler of that event.",
+      "id": "library.api.bus.library_bus",
+      "name": "LibraryBus",
+      "parent": "library.api",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/events.ts",
+        "line": 3,
+        "repo": "api"
+      },
+      "technology": "In-process event bus",
+      "type": "bus"
+    },
+    {
+      "confidence": "high",
+      "derivedFrom": {
+        "rule": "folder",
+        "value": "src/modules/loans"
+      },
+      "description": "Folder src/modules/loans.",
+      "id": "library.api.loans",
+      "name": "loans",
+      "parent": "library.api",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/loans/loan-audit.ts",
+        "line": 13,
+        "repo": "api"
+      },
+      "type": "module"
+    },
+    {
+      "facets": {
+        "nest.module": {}
+      },
+      "id": "library.api.loans.loan_audit_module",
+      "name": "LoanAuditModule",
+      "parent": "library.api.loans",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/loans/loan-audit.ts",
+        "line": 13,
+        "repo": "api"
+      },
+      "type": "module"
+    },
+    {
+      "facets": {
+        "nest.service": {}
+      },
+      "id": "library.api.loans.loan_audit_module.loan_audit_service",
+      "methods": [
+        {
+          "line": 10,
+          "name": "record"
+        }
+      ],
+      "name": "LoanAuditService",
+      "parent": "library.api.loans.loan_audit_module",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/loans/loan-audit.ts",
+        "line": 7,
+        "repo": "api"
+      },
+      "type": "component"
+    },
+    {
+      "facets": {
+        "nest.module": {}
+      },
+      "id": "library.api.loans.loan_module",
+      "name": "LoanModule",
+      "parent": "library.api.loans",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/loans/loans.ts",
+        "line": 18,
+        "repo": "api"
+      },
+      "type": "module"
+    },
+    {
+      "facets": {
+        "nest.controller": {
+          "prefix": "/loans"
+        }
+      },
+      "id": "library.api.loans.loan_module.loan_controller",
+      "methods": [
+        {
+          "line": 16,
+          "name": "create"
+        },
+        {
+          "line": 15,
+          "name": "list"
+        }
+      ],
+      "name": "LoanController",
+      "parent": "library.api.loans.loan_module",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/loans/loans.ts",
+        "line": 12,
+        "repo": "api"
+      },
+      "type": "component"
+    },
+    {
+      "access": {
+        "level": "authenticated"
+      },
+      "contract": {
+        "doc": "contracts/library.openapi.json",
+        "operationId": "LoanController_list"
+      },
+      "facets": {
+        "nest.route": {
+          "auth": "jwt"
+        }
+      },
+      "handler": "list",
+      "http": {
+        "method": "GET",
+        "path": "/loans"
+      },
+      "id": "library.api.loans.loan_module.loan_controller.get_loans",
+      "name": "GET /loans",
+      "parent": "library.api.loans.loan_module.loan_controller",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/loans/loans.ts",
+        "line": 15,
+        "repo": "api"
+      },
+      "type": "endpoint"
+    },
+    {
+      "access": {
+        "level": "authenticated"
+      },
+      "contract": {
+        "doc": "contracts/library.openapi.json",
+        "operationId": "LoanController_create",
+        "request": "#/components/schemas/LoanRequest",
+        "response": "#/components/schemas/LoanReceipt"
+      },
+      "facets": {
+        "nest.route": {
+          "auth": "jwt"
+        }
+      },
+      "handler": "create",
+      "http": {
+        "method": "POST",
+        "path": "/loans"
+      },
+      "id": "library.api.loans.loan_module.loan_controller.post_loans",
+      "name": "POST /loans",
+      "parent": "library.api.loans.loan_module.loan_controller",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/loans/loans.ts",
+        "line": 16,
+        "repo": "api"
+      },
+      "type": "endpoint"
+    },
+    {
+      "facets": {
+        "nest.service": {}
+      },
+      "id": "library.api.loans.loan_module.loan_service",
+      "methods": [
+        {
+          "line": 10,
+          "name": "create"
+        },
+        {
+          "line": 9,
+          "name": "list"
+        }
+      ],
+      "name": "LoanService",
+      "parent": "library.api.loans.loan_module",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/loans/loans.ts",
+        "line": 6,
+        "repo": "api"
+      },
+      "type": "component"
+    },
+    {
+      "confidence": "high",
+      "derivedFrom": {
+        "rule": "folder",
+        "value": "src/modules/members"
+      },
+      "description": "Folder src/modules/members.",
+      "id": "library.api.members",
+      "name": "members",
+      "parent": "library.api",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/members/members.ts",
+        "line": 17,
+        "repo": "api"
+      },
+      "type": "module"
+    },
+    {
+      "facets": {
+        "nest.module": {}
+      },
+      "id": "library.api.members.member_module",
+      "name": "MemberModule",
+      "parent": "library.api.members",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/members/members.ts",
+        "line": 17,
+        "repo": "api"
+      },
+      "type": "module"
+    },
+    {
+      "facets": {
+        "nest.controller": {
+          "prefix": "/members"
+        }
+      },
+      "id": "library.api.members.member_module.member_controller",
+      "methods": [
+        {
+          "line": 15,
+          "name": "create"
+        },
+        {
+          "line": 14,
+          "name": "list"
+        }
+      ],
+      "name": "MemberController",
+      "parent": "library.api.members.member_module",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/members/members.ts",
+        "line": 11,
+        "repo": "api"
+      },
+      "type": "component"
+    },
+    {
+      "access": {
+        "level": "authenticated"
+      },
+      "contract": {
+        "doc": "contracts/library.openapi.json",
+        "operationId": "MemberController_list"
+      },
+      "facets": {
+        "nest.route": {
+          "auth": "jwt"
+        }
+      },
+      "handler": "list",
+      "http": {
+        "method": "GET",
+        "path": "/members"
+      },
+      "id": "library.api.members.member_module.member_controller.get_members",
+      "name": "GET /members",
+      "parent": "library.api.members.member_module.member_controller",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/members/members.ts",
+        "line": 14,
+        "repo": "api"
+      },
+      "type": "endpoint"
+    },
+    {
+      "access": {
+        "level": "authenticated"
+      },
+      "contract": {
+        "doc": "contracts/library.openapi.json",
+        "operationId": "MemberController_create"
+      },
+      "facets": {
+        "nest.route": {
+          "auth": "jwt"
+        }
+      },
+      "handler": "create",
+      "http": {
+        "method": "POST",
+        "path": "/members"
+      },
+      "id": "library.api.members.member_module.member_controller.post_members",
+      "name": "POST /members",
+      "parent": "library.api.members.member_module.member_controller",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/members/members.ts",
+        "line": 15,
+        "repo": "api"
+      },
+      "type": "endpoint"
+    },
+    {
+      "facets": {
+        "nest.service": {}
+      },
+      "id": "library.api.members.member_module.member_service",
+      "methods": [
+        {
+          "line": 9,
+          "name": "create"
+        },
+        {
+          "line": 8,
+          "name": "list"
+        }
+      ],
+      "name": "MemberService",
+      "parent": "library.api.members.member_module",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/members/members.ts",
+        "line": 5,
+        "repo": "api"
+      },
+      "type": "component"
+    },
+    {
+      "confidence": "high",
+      "derivedFrom": {
+        "rule": "folder",
+        "value": "src/modules/notices"
+      },
+      "description": "Folder src/modules/notices.",
+      "id": "library.api.notices",
+      "name": "notices",
+      "parent": "library.api",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/notices/notices.ts",
+        "line": 17,
+        "repo": "api"
+      },
+      "type": "module"
+    },
+    {
+      "facets": {
+        "nest.module": {}
+      },
+      "id": "library.api.notices.notice_module",
+      "name": "NoticeModule",
+      "parent": "library.api.notices",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/notices/notices.ts",
+        "line": 17,
+        "repo": "api"
+      },
+      "type": "module"
+    },
+    {
+      "facets": {
+        "nest.controller": {
+          "prefix": "/notices"
+        }
+      },
+      "id": "library.api.notices.notice_module.notice_controller",
+      "methods": [
+        {
+          "line": 15,
+          "name": "create"
+        },
+        {
+          "line": 14,
+          "name": "list"
+        }
+      ],
+      "name": "NoticeController",
+      "parent": "library.api.notices.notice_module",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/notices/notices.ts",
+        "line": 11,
+        "repo": "api"
+      },
+      "type": "component"
+    },
+    {
+      "access": {
+        "level": "authenticated"
+      },
+      "contract": {
+        "doc": "contracts/library.openapi.json",
+        "operationId": "NoticeController_list"
+      },
+      "facets": {
+        "nest.route": {
+          "auth": "jwt"
+        }
+      },
+      "handler": "list",
+      "http": {
+        "method": "GET",
+        "path": "/notices"
+      },
+      "id": "library.api.notices.notice_module.notice_controller.get_notices",
+      "name": "GET /notices",
+      "parent": "library.api.notices.notice_module.notice_controller",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/notices/notices.ts",
+        "line": 14,
+        "repo": "api"
+      },
+      "type": "endpoint"
+    },
+    {
+      "access": {
+        "level": "authenticated"
+      },
+      "contract": {
+        "doc": "contracts/library.openapi.json",
+        "operationId": "NoticeController_create"
+      },
+      "facets": {
+        "nest.route": {
+          "auth": "jwt"
+        }
+      },
+      "handler": "create",
+      "http": {
+        "method": "POST",
+        "path": "/notices"
+      },
+      "id": "library.api.notices.notice_module.notice_controller.post_notices",
+      "name": "POST /notices",
+      "parent": "library.api.notices.notice_module.notice_controller",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/notices/notices.ts",
+        "line": 15,
+        "repo": "api"
+      },
+      "type": "endpoint"
+    },
+    {
+      "facets": {
+        "nest.service": {}
+      },
+      "id": "library.api.notices.notice_module.notice_service",
+      "methods": [
+        {
+          "line": 9,
+          "name": "create"
+        },
+        {
+          "line": 8,
+          "name": "list"
+        }
+      ],
+      "name": "NoticeService",
+      "parent": "library.api.notices.notice_module",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/notices/notices.ts",
+        "line": 5,
+        "repo": "api"
+      },
+      "type": "component"
+    },
+    {
+      "confidence": "high",
+      "derivedFrom": {
+        "rule": "folder",
+        "value": "src/modules/notifications"
+      },
+      "description": "Folder src/modules/notifications.",
+      "id": "library.api.notifications",
+      "name": "notifications",
+      "parent": "library.api",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/notifications/notifications.ts",
+        "line": 11,
+        "repo": "api"
+      },
+      "type": "module"
+    },
+    {
+      "facets": {
+        "nest.module": {}
+      },
+      "id": "library.api.notifications.notification_module",
+      "name": "NotificationModule",
+      "parent": "library.api.notifications",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/notifications/notifications.ts",
+        "line": 11,
+        "repo": "api"
+      },
+      "type": "module"
+    },
+    {
+      "facets": {
+        "nest.service": {}
+      },
+      "id": "library.api.notifications.notification_module.notification_service",
+      "methods": [
+        {
+          "line": 8,
+          "name": "onLoan"
+        }
+      ],
+      "name": "NotificationService",
+      "parent": "library.api.notifications.notification_module",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/notifications/notifications.ts",
+        "line": 5,
+        "repo": "api"
+      },
+      "type": "component"
+    },
+    {
+      "confidence": "high",
+      "derivedFrom": {
+        "rule": "folder",
+        "value": "src/modules/reservations"
+      },
+      "description": "Folder src/modules/reservations.",
+      "id": "library.api.reservations",
+      "name": "reservations",
+      "parent": "library.api",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/reservations/reservations.ts",
+        "line": 17,
+        "repo": "api"
+      },
+      "type": "module"
+    },
+    {
+      "facets": {
+        "nest.module": {}
+      },
+      "id": "library.api.reservations.reservation_module",
+      "name": "ReservationModule",
+      "parent": "library.api.reservations",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/reservations/reservations.ts",
+        "line": 17,
+        "repo": "api"
+      },
+      "type": "module"
+    },
+    {
+      "facets": {
+        "nest.controller": {
+          "prefix": "/reservations"
+        }
+      },
+      "id": "library.api.reservations.reservation_module.reservation_controller",
+      "methods": [
+        {
+          "line": 15,
+          "name": "create"
+        },
+        {
+          "line": 14,
+          "name": "list"
+        }
+      ],
+      "name": "ReservationController",
+      "parent": "library.api.reservations.reservation_module",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/reservations/reservations.ts",
+        "line": 11,
+        "repo": "api"
+      },
+      "type": "component"
+    },
+    {
+      "access": {
+        "level": "authenticated"
+      },
+      "contract": {
+        "doc": "contracts/library.openapi.json",
+        "operationId": "ReservationController_list"
+      },
+      "facets": {
+        "nest.route": {
+          "auth": "jwt"
+        }
+      },
+      "handler": "list",
+      "http": {
+        "method": "GET",
+        "path": "/reservations"
+      },
+      "id": "library.api.reservations.reservation_module.reservation_controller.get_reservations",
+      "name": "GET /reservations",
+      "parent": "library.api.reservations.reservation_module.reservation_controller",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/reservations/reservations.ts",
+        "line": 14,
+        "repo": "api"
+      },
+      "type": "endpoint"
+    },
+    {
+      "access": {
+        "level": "authenticated"
+      },
+      "contract": {
+        "doc": "contracts/library.openapi.json",
+        "operationId": "ReservationController_create"
+      },
+      "facets": {
+        "nest.route": {
+          "auth": "jwt"
+        }
+      },
+      "handler": "create",
+      "http": {
+        "method": "POST",
+        "path": "/reservations"
+      },
+      "id": "library.api.reservations.reservation_module.reservation_controller.post_reservations",
+      "name": "POST /reservations",
+      "parent": "library.api.reservations.reservation_module.reservation_controller",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/reservations/reservations.ts",
+        "line": 15,
+        "repo": "api"
+      },
+      "type": "endpoint"
+    },
+    {
+      "facets": {
+        "nest.service": {}
+      },
+      "id": "library.api.reservations.reservation_module.reservation_service",
+      "methods": [
+        {
+          "line": 9,
+          "name": "create"
+        },
+        {
+          "line": 8,
+          "name": "list"
+        }
+      ],
+      "name": "ReservationService",
+      "parent": "library.api.reservations.reservation_module",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/modules/reservations/reservations.ts",
+        "line": 5,
+        "repo": "api"
+      },
+      "type": "component"
+    },
+    {
+      "description": "Catalog and circulation records.",
+      "facets": {
+        "mysql.database": {}
+      },
+      "id": "library.db",
+      "name": "Library database",
+      "parent": null,
+      "provenance": "declared",
+      "source": {
+        "config": "examples/library-nest/config.ts#DATABASE"
+      },
+      "technology": "PostgreSQL",
+      "type": "datastore"
+    },
+    {
+      "columns": [
+        {
+          "name": "id",
+          "nullable": false,
+          "pk": true,
+          "type": "'UUID'"
+        },
+        {
+          "name": "title",
+          "nullable": false,
+          "pk": false,
+          "type": "'TEXT'"
+        }
+      ],
+      "facets": {
+        "sequelize.model": {
+          "associations": [],
+          "model": "Book"
+        }
+      },
+      "id": "library.db.books",
+      "name": "books",
+      "parent": "library.db",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/models/books.ts",
+        "line": 2,
+        "repo": "api"
+      },
+      "technology": "Sequelize Book",
+      "type": "table"
+    },
+    {
+      "columns": [
+        {
+          "name": "id",
+          "nullable": false,
+          "pk": true,
+          "type": "'UUID'"
+        },
+        {
+          "name": "title",
+          "nullable": false,
+          "pk": false,
+          "type": "'TEXT'"
+        }
+      ],
+      "facets": {
+        "sequelize.model": {
+          "associations": [],
+          "model": "Branch"
+        }
+      },
+      "id": "library.db.branches",
+      "name": "branches",
+      "parent": "library.db",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/models/branches.ts",
+        "line": 2,
+        "repo": "api"
+      },
+      "technology": "Sequelize Branch",
+      "type": "table"
+    },
+    {
+      "columns": [
+        {
+          "name": "id",
+          "nullable": false,
+          "pk": true,
+          "type": "'UUID'"
+        },
+        {
+          "name": "title",
+          "nullable": false,
+          "pk": false,
+          "type": "'TEXT'"
+        },
+        {
+          "name": "referenceId",
+          "nullable": false,
+          "pk": false,
+          "type": "'UUID'"
+        }
+      ],
+      "facets": {
+        "sequelize.model": {
+          "associations": [
+            {
+              "field": "referenceId",
+              "rel": "ForeignKey",
+              "target": "Book"
+            }
+          ],
+          "model": "Loan"
+        }
+      },
+      "id": "library.db.loans",
+      "name": "loans",
+      "parent": "library.db",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/models/loans.ts",
+        "line": 3,
+        "repo": "api"
+      },
+      "technology": "Sequelize Loan",
+      "type": "table"
+    },
+    {
+      "columns": [
+        {
+          "name": "id",
+          "nullable": false,
+          "pk": true,
+          "type": "'UUID'"
+        },
+        {
+          "name": "title",
+          "nullable": false,
+          "pk": false,
+          "type": "'TEXT'"
+        }
+      ],
+      "facets": {
+        "sequelize.model": {
+          "associations": [],
+          "model": "Member"
+        }
+      },
+      "id": "library.db.members",
+      "name": "members",
+      "parent": "library.db",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/models/members.ts",
+        "line": 2,
+        "repo": "api"
+      },
+      "technology": "Sequelize Member",
+      "type": "table"
+    },
+    {
+      "columns": [
+        {
+          "name": "id",
+          "nullable": false,
+          "pk": true,
+          "type": "'UUID'"
+        },
+        {
+          "name": "title",
+          "nullable": false,
+          "pk": false,
+          "type": "'TEXT'"
+        },
+        {
+          "name": "referenceId",
+          "nullable": false,
+          "pk": false,
+          "type": "'UUID'"
+        }
+      ],
+      "facets": {
+        "sequelize.model": {
+          "associations": [
+            {
+              "field": "referenceId",
+              "rel": "ForeignKey",
+              "target": "Loan"
+            }
+          ],
+          "model": "Notice"
+        }
+      },
+      "id": "library.db.notices",
+      "name": "notices",
+      "parent": "library.db",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/models/notices.ts",
+        "line": 3,
+        "repo": "api"
+      },
+      "technology": "Sequelize Notice",
+      "type": "table"
+    },
+    {
+      "columns": [
+        {
+          "name": "id",
+          "nullable": false,
+          "pk": true,
+          "type": "'UUID'"
+        },
+        {
+          "name": "title",
+          "nullable": false,
+          "pk": false,
+          "type": "'TEXT'"
+        },
+        {
+          "name": "referenceId",
+          "nullable": false,
+          "pk": false,
+          "type": "'UUID'"
+        }
+      ],
+      "facets": {
+        "sequelize.model": {
+          "associations": [
+            {
+              "field": "referenceId",
+              "rel": "ForeignKey",
+              "target": "Member"
+            }
+          ],
+          "model": "Reservation"
+        }
+      },
+      "id": "library.db.reservations",
+      "name": "reservations",
+      "parent": "library.db",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/models/reservations.ts",
+        "line": 3,
+        "repo": "api"
+      },
+      "technology": "Sequelize Reservation",
+      "type": "table"
+    },
+    {
+      "description": "Shares public book metadata.",
+      "facets": {
+        "config.external": {}
+      },
+      "id": "library.ext.catalog",
+      "name": "Catalog exchange",
+      "parent": null,
+      "provenance": "declared",
+      "source": {
+        "config": "examples/library-nest/config.ts#EXTERNALS.library.ext.catalog"
+      },
+      "technology": "HTTPS",
+      "type": "external-system"
+    },
+    {
+      "description": "Delivers loan notices.",
+      "facets": {
+        "config.external": {}
+      },
+      "id": "library.ext.email",
+      "name": "Email provider",
+      "parent": null,
+      "provenance": "declared",
+      "source": {
+        "config": "examples/library-nest/config.ts#EXTERNALS.library.ext.email"
+      },
+      "technology": "SMTP",
+      "type": "external-system"
+    },
+    {
+      "description": "Browse and borrow books.",
+      "facets": {
+        "vue.app": {}
+      },
+      "id": "library.web",
+      "name": "Library catalog",
+      "parent": null,
+      "provenance": "extracted",
+      "source": {
+        "file": "package.json",
+        "line": 1,
+        "repo": "web"
+      },
+      "technology": "Vue, TypeScript",
+      "tier": "ui",
+      "type": "app"
+    },
+    {
+      "confidence": "high",
+      "derivedFrom": {
+        "rule": "folder",
+        "value": "src/catalog"
+      },
+      "id": "library.web.catalog",
+      "name": "src/catalog",
+      "parent": "library.web",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/catalog/Catalog.vue",
+        "line": 1,
+        "repo": "web"
+      },
+      "type": "module"
+    },
+    {
+      "facets": {
+        "ts.api-client": {}
+      },
+      "id": "library.web.catalog.api",
+      "name": "api.ts",
+      "parent": "library.web.catalog",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/catalog/api.ts",
+        "line": 1,
+        "repo": "web"
+      },
+      "type": "component"
+    },
+    {
+      "facets": {
+        "vue.view": {}
+      },
+      "id": "library.web.catalog.catalog",
+      "name": "Catalog.vue",
+      "parent": "library.web.catalog",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/catalog/Catalog.vue",
+        "line": 1,
+        "repo": "web"
+      },
+      "type": "component"
+    }
+  ],
+  "glyphs": [
+    {
+      "facet": "nest.controller",
+      "role": "controller",
+      "shape": "endpoints"
+    },
+    {
+      "facet": "nest.service",
+      "role": "service",
+      "shape": "core"
+    },
+    {
+      "facet": "nest.repository",
+      "role": "repository",
+      "shape": "stack"
+    },
+    {
+      "facet": "sequelize.model",
+      "role": "table",
+      "shape": "grid"
+    },
+    {
+      "facet": "vue.view",
+      "role": "Vue component",
+      "shape": "frame"
+    },
+    {
+      "facet": "ts.api-client",
+      "role": "API calls",
+      "shape": "arrow"
+    },
+    {
+      "facet": "ts.module",
+      "role": "front-end module",
+      "shape": "ring"
+    },
+    {
+      "facet": "mysql.database",
+      "role": "database",
+      "shape": "grid"
+    },
+    {
+      "facet": "nest.module",
+      "role": "Nest module",
+      "shape": "matrix"
+    }
+  ],
+  "id": "library-nest",
+  "repos": {
+    "api": {
+      "blob": "examples/library-nest/target/backend/blob/a771679f8cb6/{file}#L{line}",
+      "commit": "a771679f8cb6",
+      "url": "examples/library-nest/target/backend"
+    },
+    "web": {
+      "blob": "examples/library-nest/target/web/blob/a771679f8cb6/{file}#L{line}",
+      "commit": "a771679f8cb6",
+      "url": "examples/library-nest/target/web"
+    }
+  },
+  "schemaVersion": "1.3.0",
+  "title": "Public library — NestJS"
+}

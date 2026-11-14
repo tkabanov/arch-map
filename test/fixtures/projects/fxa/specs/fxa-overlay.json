@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema/spec.schema.json",
+  "schemaVersion": "1.0.0",
+  "id": "fxa-overlay",
+  "title": "fxa: overlay",
+  "requires": ["fxa-core.json"],
+  "elements": [
+    { "id": "fxa.actor.user", "type": "actor", "parent": null, "name": "User", "provenance": "authored" }
+  ],
+  "edges": []
+}

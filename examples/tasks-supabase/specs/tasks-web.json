@@ -1,0 +1,296 @@
+{
+  "$schema": "../schema/spec.schema.json",
+  "edges": [
+    {
+      "access": {
+        "level": "authenticated",
+        "policies": [
+          "comments_team_access"
+        ]
+      },
+      "channel": "write",
+      "from": "tasks.cand.api.tasks",
+      "fromMethod": "comment",
+      "id": "tasks.cand.api.tasks#comment>tasks.db.task.comments:write",
+      "ops": [
+        "insert"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "src/api/resources/tasks/live.ts",
+        "line": 7,
+        "repo": "taskweb"
+      },
+      "to": "tasks.db.task.comments",
+      "via": [
+        "tasks.platform.gateway",
+        "tasks.platform.rest"
+      ]
+    },
+    {
+      "channel": "rest",
+      "from": "tasks.cand.api.tasks",
+      "fromMethod": "complete",
+      "id": "tasks.cand.api.tasks#complete>tasks.db.functions.task.complete_task.post_rest_v1_rpc_complete_task:rest",
+      "label": "rpc complete_task",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/api/resources/tasks/live.ts",
+        "line": 5,
+        "repo": "taskweb"
+      },
+      "to": "tasks.db.functions.task.complete_task.post_rest_v1_rpc_complete_task",
+      "via": [
+        "tasks.platform.gateway",
+        "tasks.platform.rest"
+      ]
+    },
+    {
+      "access": {
+        "level": "authenticated",
+        "policies": [
+          "tasks_team_access"
+        ]
+      },
+      "channel": "read",
+      "from": "tasks.cand.api.tasks",
+      "fromMethod": "list",
+      "id": "tasks.cand.api.tasks#list>tasks.db.task.tasks:read",
+      "ops": [
+        "select"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "src/api/resources/tasks/live.ts",
+        "line": 4,
+        "repo": "taskweb"
+      },
+      "to": "tasks.db.task.tasks",
+      "via": [
+        "tasks.platform.gateway",
+        "tasks.platform.rest"
+      ]
+    },
+    {
+      "channel": "rest",
+      "from": "tasks.cand.api.tasks",
+      "fromMethod": "signIn",
+      "id": "tasks.cand.api.tasks#signIn>tasks.platform.auth:rest",
+      "label": "/auth/v1: signInWithOtp",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/api/resources/tasks/live.ts",
+        "line": 8,
+        "repo": "taskweb"
+      },
+      "to": "tasks.platform.auth",
+      "via": [
+        "tasks.platform.gateway"
+      ]
+    },
+    {
+      "channel": "rest",
+      "from": "tasks.cand.api.tasks",
+      "fromMethod": "summarize",
+      "id": "tasks.cand.api.tasks#summarize>tasks.edge.task.task_summary.index.post_task_summary:rest",
+      "label": "POST /task-summary",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/api/resources/tasks/live.ts",
+        "line": 6,
+        "repo": "taskweb"
+      },
+      "to": "tasks.edge.task.task_summary.index.post_task_summary",
+      "via": [
+        "tasks.platform.gateway"
+      ]
+    },
+    {
+      "channel": "call",
+      "from": "tasks.cand.boards.board",
+      "fromMethod": "Component",
+      "id": "tasks.cand.boards.board#Component>tasks.cand.api.tasks#comment:call",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/features/boards/Board.tsx",
+        "line": 3,
+        "repo": "taskweb"
+      },
+      "to": "tasks.cand.api.tasks",
+      "toMethod": "comment"
+    },
+    {
+      "channel": "call",
+      "from": "tasks.cand.boards.board",
+      "fromMethod": "Component",
+      "id": "tasks.cand.boards.board#Component>tasks.cand.api.tasks#list:call",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/features/boards/Board.tsx",
+        "line": 3,
+        "repo": "taskweb"
+      },
+      "to": "tasks.cand.api.tasks",
+      "toMethod": "list"
+    },
+    {
+      "channel": "call",
+      "from": "tasks.cand.boards.board",
+      "fromMethod": "Component",
+      "id": "tasks.cand.boards.board#Component>tasks.cand.api.tasks#summarize:call",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/features/boards/Board.tsx",
+        "line": 3,
+        "repo": "taskweb"
+      },
+      "to": "tasks.cand.api.tasks",
+      "toMethod": "summarize"
+    }
+  ],
+  "elements": [
+    {
+      "description": "View tasks, attach files and request summaries.",
+      "facets": {
+        "react.app": {
+          "apiMode": "VITE_API_MODE=live",
+          "router": "react-router (data router, lazy routes)",
+          "routes": 1
+        },
+        "supabase.client": {
+          "key": "publishable (anon)",
+          "rls": "applies",
+          "session": "user JWT"
+        }
+      },
+      "id": "tasks.cand",
+      "name": "Task board",
+      "parent": null,
+      "provenance": "extracted",
+      "source": {
+        "file": "src/app/routes.tsx",
+        "line": 1,
+        "repo": "taskweb"
+      },
+      "technology": "React, supabase-js",
+      "tier": "ui",
+      "type": "app"
+    },
+    {
+      "confidence": "high",
+      "derivedFrom": {
+        "rule": "folder",
+        "value": "src/api"
+      },
+      "description": "src/api: a port per domain (resources/<domain>/types.ts), its live adapter (supabase-js) and the hooks the screens use; the seam live/ holds the one client and shared helpers.",
+      "id": "tasks.cand.api",
+      "name": "api",
+      "parent": "tasks.cand",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/api/resources/tasks/live.ts",
+        "line": 4,
+        "repo": "taskweb"
+      },
+      "type": "module"
+    },
+    {
+      "description": "src/api/resources/tasks/: the port, its live adapter and hooks. No stub method(s) pending live.",
+      "id": "tasks.cand.api.tasks",
+      "methods": [
+        {
+          "line": 7,
+          "name": "comment"
+        },
+        {
+          "line": 5,
+          "name": "complete"
+        },
+        {
+          "line": 4,
+          "name": "list"
+        },
+        {
+          "line": 8,
+          "name": "signIn"
+        },
+        {
+          "line": 6,
+          "name": "summarize"
+        }
+      ],
+      "name": "tasks",
+      "parent": "tasks.cand.api",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/api/resources/tasks/live.ts",
+        "line": 4,
+        "repo": "taskweb"
+      },
+      "technology": "port + live adapter",
+      "type": "component"
+    },
+    {
+      "confidence": "high",
+      "derivedFrom": {
+        "rule": "folder",
+        "value": "src/features/boards"
+      },
+      "description": "Screens of src/features/boards/",
+      "id": "tasks.cand.boards",
+      "name": "boards",
+      "parent": "tasks.cand",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/features/boards/Board.tsx",
+        "line": 2,
+        "repo": "taskweb"
+      },
+      "type": "module"
+    },
+    {
+      "description": "Board.tsx: /boards — Boards",
+      "facets": {
+        "react.route": {
+          "routes": [
+            {
+              "path": "/boards",
+              "title": "Boards"
+            }
+          ]
+        }
+      },
+      "id": "tasks.cand.boards.board",
+      "methods": [
+        {
+          "line": 2,
+          "name": "Component"
+        }
+      ],
+      "name": "Boards",
+      "parent": "tasks.cand.boards",
+      "provenance": "extracted",
+      "source": {
+        "file": "src/features/boards/Board.tsx",
+        "line": 2,
+        "repo": "taskweb"
+      },
+      "technology": "React route screen",
+      "type": "component"
+    }
+  ],
+  "id": "tasks-web",
+  "repos": {
+    "taskweb": {
+      "blob": "examples/tasks-supabase/target/web/blob/b9db41922ee0/{file}#L{line}",
+      "commit": "b9db41922ee0",
+      "url": "examples/tasks-supabase/target/web"
+    }
+  },
+  "requires": [
+    "tasks-database.json",
+    "tasks-edge.json"
+  ],
+  "schemaVersion": "1.2.0",
+  "title": "Task board client"
+}

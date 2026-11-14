@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Host page</title>
+  <link rel="icon" href="data:,">
+  <!-- the package as a page that is not ours would use it: its fonts and the one script (test/browser/embed.test.ts) -->
+  <link rel="stylesheet" href="/dist/fonts.css">
+  <style>
+    /* the host page's own look: the maps must not change it, and it must not reach into the maps */
+    body { margin: 12px; font: 15px/1.3 Georgia, serif; color: rgb(20, 30, 40); background: rgb(250, 245, 235); }
+    #panel, .top, .notice, button { border: 3px dotted rgb(200, 0, 0); color: rgb(200, 0, 0); padding: 7px; }
+    .row { display: flex; gap: 12px; }
+    .map { width: 760px; height: 560px; }
+    #hidden { width: 0; height: 0; overflow: hidden; }
+  </style>
+</head>
+<body>
+  <h1>Host page</h1>
+  <p id="note">Two maps below. <button id="pagebtn">A page button</button></p>
+  <div id="panel">The page's own #panel</div>
+  <div class="row">
+    <div id="a" class="map"></div>
+    <div id="b" class="map"></div>
+  </div>
+  <div id="c" class="map" style="height: 120px"></div>
+  <div id="hidden"></div>
+  <script src="/dist/arch-map.iife.js"></script>
+</body>
+</html>

@@ -1,0 +1,343 @@
+{
+  "$schema": "../schema/spec.schema.json",
+  "edges": [
+    {
+      "channel": "write",
+      "from": "tasks.edge.task.task_notify.index",
+      "fromMethod": "notify",
+      "id": "tasks.edge.task.task_notify.index#notify>tasks.db.task.comments:write",
+      "ops": [
+        "insert"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/functions/task-notify/index.ts",
+        "line": 3,
+        "repo": "taskcode"
+      },
+      "to": "tasks.db.task.comments",
+      "via": [
+        "tasks.platform.gateway",
+        "tasks.platform.rest"
+      ]
+    },
+    {
+      "channel": "https",
+      "from": "tasks.edge.task.task_notify.index",
+      "fromMethod": "notify",
+      "id": "tasks.edge.task.task_notify.index#notify>tasks.ext.email:https",
+      "ops": [
+        "mail.example.test"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/functions/task-notify/index.ts",
+        "line": 5,
+        "repo": "taskcode"
+      },
+      "to": "tasks.ext.email"
+    },
+    {
+      "channel": "write",
+      "from": "tasks.edge.task.task_notify.index",
+      "fromMethod": "notify",
+      "id": "tasks.edge.task.task_notify.index#notify>tasks.files.attachments:write",
+      "ops": [
+        "upload"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/functions/task-notify/index.ts",
+        "line": 4,
+        "repo": "taskcode"
+      },
+      "to": "tasks.files.attachments",
+      "via": [
+        "tasks.platform.gateway",
+        "tasks.platform.storage"
+      ]
+    },
+    {
+      "channel": "rest",
+      "from": "tasks.edge.task.task_summary.index",
+      "fromMethod": "summarize",
+      "id": "tasks.edge.task.task_summary.index#summarize>tasks.db.functions.task.task_count.post_rest_v1_rpc_task_count:rest",
+      "label": "rpc task_count",
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/functions/task-summary/index.ts",
+        "line": 4,
+        "repo": "taskcode"
+      },
+      "to": "tasks.db.functions.task.task_count.post_rest_v1_rpc_task_count",
+      "via": [
+        "tasks.platform.gateway",
+        "tasks.platform.rest"
+      ]
+    },
+    {
+      "channel": "read",
+      "from": "tasks.edge.task.task_summary.index",
+      "fromMethod": "summarize",
+      "id": "tasks.edge.task.task_summary.index#summarize>tasks.db.task.tasks:read",
+      "ops": [
+        "select"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/functions/task-summary/index.ts",
+        "line": 3,
+        "repo": "taskcode"
+      },
+      "to": "tasks.db.task.tasks",
+      "via": [
+        "tasks.platform.gateway",
+        "tasks.platform.rest"
+      ]
+    },
+    {
+      "channel": "rest",
+      "from": "tasks.edge.task.task_summary.index",
+      "fromMethod": "summarize",
+      "id": "tasks.edge.task.task_summary.index#summarize>tasks.edge.task.task_notify.index.post_task_notify:rest",
+      "label": "POST /task-notify",
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/functions/task-summary/index.ts",
+        "line": 6,
+        "repo": "taskcode"
+      },
+      "to": "tasks.edge.task.task_notify.index.post_task_notify",
+      "via": [
+        "tasks.platform.gateway"
+      ]
+    },
+    {
+      "channel": "read",
+      "from": "tasks.edge.task.task_summary.index",
+      "fromMethod": "summarize",
+      "id": "tasks.edge.task.task_summary.index#summarize>tasks.files.attachments:read",
+      "ops": [
+        "download"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/functions/task-summary/index.ts",
+        "line": 5,
+        "repo": "taskcode"
+      },
+      "to": "tasks.files.attachments",
+      "via": [
+        "tasks.platform.gateway",
+        "tasks.platform.storage"
+      ]
+    },
+    {
+      "channel": "rest",
+      "from": "tasks.platform.gateway",
+      "id": "tasks.platform.gateway>tasks.edge:rest",
+      "label": "/functions/v1",
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/config.toml",
+        "line": 10,
+        "repo": "taskcode"
+      },
+      "to": "tasks.edge"
+    }
+  ],
+  "elements": [
+    {
+      "description": "HTTP functions behind /functions/v1, one per folder of supabase/functions; shared code in helpers/.",
+      "id": "tasks.edge",
+      "name": "Edge Functions",
+      "parent": null,
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/config.toml",
+        "line": 10,
+        "repo": "taskcode"
+      },
+      "technology": "Deno, Supabase Edge Functions",
+      "tier": "service",
+      "type": "app"
+    },
+    {
+      "confidence": "medium",
+      "derivedFrom": {
+        "rule": "prefix",
+        "value": "task"
+      },
+      "description": "Edge Functions about «task»: by their name, else by the tables they use most.",
+      "id": "tasks.edge.task",
+      "name": "task",
+      "parent": "tasks.edge",
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/functions/task-notify/index.ts",
+        "line": 8,
+        "repo": "taskcode"
+      },
+      "type": "module"
+    },
+    {
+      "description": "Edge Function «task-notify» (/task-notify)",
+      "facets": {
+        "deno.edge": {
+          "basePath": "/task-notify",
+          "function": "task-notify",
+          "verifyJwt": true
+        }
+      },
+      "id": "tasks.edge.task.task_notify",
+      "name": "task-notify",
+      "parent": "tasks.edge.task",
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/functions/task-notify/index.ts",
+        "line": 8,
+        "repo": "taskcode"
+      },
+      "type": "module"
+    },
+    {
+      "id": "tasks.edge.task.task_notify.index",
+      "methods": [
+        {
+          "line": 2,
+          "name": "notify"
+        }
+      ],
+      "name": "index.ts",
+      "parent": "tasks.edge.task.task_notify",
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/functions/task-notify/index.ts",
+        "line": 2,
+        "repo": "taskcode"
+      },
+      "type": "component"
+    },
+    {
+      "access": {
+        "level": "authenticated"
+      },
+      "contract": {
+        "doc": "contracts/tasks-edge.openapi.json",
+        "response": "#/components/schemas/NotifyResponse"
+      },
+      "facets": {
+        "deno.route": {
+          "authRequired": true
+        }
+      },
+      "handler": "notify",
+      "http": {
+        "method": "POST",
+        "path": "/task-notify"
+      },
+      "id": "tasks.edge.task.task_notify.index.post_task_notify",
+      "name": "POST /task-notify",
+      "parent": "tasks.edge.task.task_notify.index",
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/functions/task-notify/index.ts",
+        "line": 8,
+        "repo": "taskcode"
+      },
+      "type": "endpoint"
+    },
+    {
+      "description": "Edge Function «task-summary» (/task-summary)",
+      "facets": {
+        "deno.edge": {
+          "basePath": "/task-summary",
+          "function": "task-summary",
+          "verifyJwt": true
+        }
+      },
+      "id": "tasks.edge.task.task_summary",
+      "name": "task-summary",
+      "parent": "tasks.edge.task",
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/functions/task-summary/index.ts",
+        "line": 9,
+        "repo": "taskcode"
+      },
+      "type": "module"
+    },
+    {
+      "id": "tasks.edge.task.task_summary.index",
+      "methods": [
+        {
+          "line": 2,
+          "name": "summarize"
+        }
+      ],
+      "name": "index.ts",
+      "parent": "tasks.edge.task.task_summary",
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/functions/task-summary/index.ts",
+        "line": 2,
+        "repo": "taskcode"
+      },
+      "type": "component"
+    },
+    {
+      "access": {
+        "level": "authenticated"
+      },
+      "contract": {
+        "doc": "contracts/tasks-edge.openapi.json",
+        "request": "#/components/schemas/SummaryRequest",
+        "response": "#/components/schemas/SummaryResponse"
+      },
+      "facets": {
+        "deno.route": {
+          "authRequired": true
+        }
+      },
+      "handler": "summarize",
+      "http": {
+        "method": "POST",
+        "path": "/task-summary"
+      },
+      "id": "tasks.edge.task.task_summary.index.post_task_summary",
+      "name": "POST /task-summary",
+      "parent": "tasks.edge.task.task_summary.index",
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/functions/task-summary/index.ts",
+        "line": 9,
+        "repo": "taskcode"
+      },
+      "type": "endpoint"
+    },
+    {
+      "id": "tasks.ext.email",
+      "name": "Email provider",
+      "parent": null,
+      "provenance": "declared",
+      "source": {
+        "config": "examples/tasks-supabase/config.ts#EXTERNALS.email"
+      },
+      "technology": "HTTPS",
+      "type": "external-system"
+    }
+  ],
+  "id": "tasks-edge",
+  "repos": {
+    "taskcode": {
+      "blob": "examples/tasks-supabase/target/blob/b9db41922ee0/{file}#L{line}",
+      "commit": "b9db41922ee0",
+      "url": "examples/tasks-supabase/target"
+    }
+  },
+  "requires": [
+    "tasks-database.json"
+  ],
+  "schemaVersion": "1.2.0",
+  "title": "Task Edge Functions"
+}

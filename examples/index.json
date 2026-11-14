@@ -1,0 +1,7 @@
+{
+  "default": "tasks-supabase",
+  "order": [
+    "tasks-supabase",
+    "library-nest"
+  ]
+}

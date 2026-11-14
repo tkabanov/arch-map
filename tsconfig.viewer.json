@@ -1,0 +1,11 @@
+{
+    // The browser side of the type check: the viewer's `.ts` files (viewer/src/**, outside the core too), with the DOM
+    // and Vite's client types instead of Node's. The core is checked here as well (the viewer imports it) and, without
+    // the DOM, in tsconfig.json; scripts/check-tsc.mjs runs both projects and counts each diagnostic once.
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "lib": ["ES2023", "DOM", "DOM.Iterable"],
+        "types": ["vite/client"]
+    },
+    "include": ["viewer/src/**/*.ts", "types/**/*.ts"]
+}

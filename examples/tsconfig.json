@@ -1,0 +1,14 @@
+{
+  "extends": "arch-map/tsconfig.json",
+  "include": [
+    "*.ts",
+    "*/config.ts",
+    "*/helpers.ts",
+    "*/generate.ts",
+    "*/snapshot.ts",
+    "*/test/*.ts"
+  ],
+  "exclude": [
+    "*/target/**"
+  ]
+}

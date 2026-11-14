@@ -1,0 +1,15 @@
+[api]
+enabled = true
+schemas = ["public"]
+[auth]
+enabled = true
+[storage]
+enabled = true
+[realtime]
+enabled = true
+[edge_runtime]
+enabled = true
+[functions.task-summary]
+verify_jwt = true
+[functions.task-notify]
+verify_jwt = true

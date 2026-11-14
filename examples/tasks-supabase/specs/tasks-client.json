@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "1.3.0",
+  "id": "tasks-client",
+  "title": "Task workspace journey",
+  "requires": [
+    "tasks-database.json",
+    "tasks-edge.json",
+    "tasks-web.json"
+  ],
+  "elements": [
+    {
+      "id": "tasks.system.client",
+      "type": "system",
+      "parent": null,
+      "name": "Workspace interface",
+      "provenance": "authored",
+      "contains": [
+        "tasks.cand"
+      ]
+    },
+    {
+      "id": "tasks.system.platform",
+      "type": "system",
+      "parent": null,
+      "name": "Task platform",
+      "provenance": "authored",
+      "contains": [
+        "tasks.db",
+        "tasks.files",
+        "tasks.platform.auth",
+        "tasks.platform.gateway",
+        "tasks.platform.graphql",
+        "tasks.platform.meta",
+        "tasks.platform.pooler",
+        "tasks.platform.realtime",
+        "tasks.platform.rest",
+        "tasks.platform.storage",
+        "tasks.platform.studio",
+        "tasks.edge"
+      ]
+    }
+  ],
+  "edges": [],
+  "scenarios": [
+    {
+      "id": "tasks.scenario.summary",
+      "title": "Request a board summary",
+      "steps": [
+        {
+          "caption": "Open the team board.",
+          "element": "tasks.cand.boards.board"
+        },
+        {
+          "caption": "Request a summary for this board.",
+          "from": "tasks.cand.api.tasks",
+          "to": "tasks.edge.task.task_summary.index.post_task_summary",
+          "channel": "rest"
+        },
+        {
+          "caption": "Read the board tasks under row policies.",
+          "element": "tasks.db.task.tasks"
+        },
+        {
+          "caption": "Store the summary and notify the team.",
+          "element": "tasks.edge.task.task_notify.index"
+        },
+        {
+          "caption": "Deliver the summary by email.",
+          "element": "tasks.ext.email"
+        }
+      ]
+    }
+  ],
+  "envelopes": {
+    "contracts/tasks-edge.openapi.json#/components/schemas/SummaryRequest": {
+      "title": "Board summary request",
+      "fields": {
+        "boardId": "The board whose tasks are summarized."
+      }
+    },
+    "contracts/tasks-edge.openapi.json#/components/schemas/SummaryResponse": {
+      "title": "Summary result",
+      "fields": {
+        "count": "Number of tasks in the board."
+      }
+    }
+  }
+}

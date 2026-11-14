@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.cache/
+viewer/dist/
+.env.local
+.playwright-mcp/
+viewer/public/specs/
+viewer/public/licenses/
+**/specs/*.meta.json
+.impeccable/
+# the package build (npm run lib:build): copies of the schemas and the license
+packages/viewer/schema/
+packages/viewer/LICENSE
+*.tgz

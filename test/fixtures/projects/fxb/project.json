@@ -1,0 +1,10 @@
+{
+  "name": "fxb",
+  "title": "fxb — one document",
+  "documents": ["fxb.json"],
+  "open": ["fxb.json"],
+  "idPrefixes": ["fxb"],
+  "env": {},
+  "generate": { "script": "generate.ts" },
+  "determinism": { "roots": [], "outputs": ["fxb.json"] }
+}

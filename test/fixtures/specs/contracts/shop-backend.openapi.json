@@ -1,0 +1,22 @@
+{
+  "openapi": "3.0.0",
+  "info": { "title": "sample", "version": "1" },
+  "paths": {
+    "/payment/webhook": {
+      "post": {
+        "operationId": "PaymentController_webhook",
+        "requestBody": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PaymentWebhookDto" } } } },
+        "responses": { "201": { "description": "" } }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PaymentWebhookDto": {
+        "type": "object",
+        "properties": { "event": { "type": "string" }, "object": { "type": "object" } },
+        "required": ["event", "object"]
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "library-api",
+  "private": true,
+  "dependencies": {
+    "@nestjs/common": "*",
+    "@nestjs/sequelize": "*",
+    "sequelize-typescript": "*"
+  }
+}

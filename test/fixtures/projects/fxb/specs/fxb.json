@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema/spec.schema.json",
+  "schemaVersion": "1.0.0",
+  "id": "fxb",
+  "title": "fxb",
+  "elements": [
+    { "id": "fxb.web", "type": "app", "parent": null, "name": "web", "tier": "ui", "provenance": "authored" }
+  ],
+  "edges": [],
+  "glyphs": [{ "facet": "fxb.page", "shape": "frame", "role": "page" }]
+}

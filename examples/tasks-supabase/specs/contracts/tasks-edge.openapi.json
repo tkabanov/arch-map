@@ -1,0 +1,36 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Task functions",
+    "version": "1.0.0",
+    "description": "The project's own OpenAPI (supabase/functions/openapi/schema.ts); request and response bodies named after their DTOs in components.schemas."
+  },
+  "components": {
+    "schemas": {
+      "NotifyResponse": {
+        "type": "object",
+        "properties": {
+          "sent": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SummaryRequest": {
+        "type": "object",
+        "properties": {
+          "boardId": {
+            "type": "string"
+          }
+        }
+      },
+      "SummaryResponse": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
+}

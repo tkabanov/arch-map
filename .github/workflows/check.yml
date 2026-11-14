@@ -1,0 +1,26 @@
+name: check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.18
+          cache: npm
+      - run: npm ci
+      # Everything that runs from this checkout alone. No external checkouts are set here, so
+      # check:determinism (regenerates from the target codebases) is not part of it, as in a local check:all.
+      - run: npm run check:all
+      # The example projects need no external checkout: regenerate them twice (byte-identical, targets unchanged) and
+      # fail when a generator no longer produces the committed specs.
+      - run: npm run check:determinism
+      - run: git diff --exit-code
+      # The package @arch-map/viewer builds, carries its license notices, and packs only what it should.
+      - run: npm run lib:pack

@@ -1,0 +1,153 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Library API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/books": {
+      "get": {
+        "operationId": "BookController_list",
+        "responses": {
+          "200": {
+            "description": "Collection"
+          }
+        }
+      },
+      "post": {
+        "operationId": "BookController_create",
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/members": {
+      "get": {
+        "operationId": "MemberController_list",
+        "responses": {
+          "200": {
+            "description": "Collection"
+          }
+        }
+      },
+      "post": {
+        "operationId": "MemberController_create",
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/loans": {
+      "get": {
+        "operationId": "LoanController_list",
+        "responses": {
+          "200": {
+            "description": "Collection"
+          }
+        }
+      },
+      "post": {
+        "operationId": "LoanController_create",
+        "responses": {
+          "201": {
+            "description": "Loan opened",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoanReceipt"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoanRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reservations": {
+      "get": {
+        "operationId": "ReservationController_list",
+        "responses": {
+          "200": {
+            "description": "Collection"
+          }
+        }
+      },
+      "post": {
+        "operationId": "ReservationController_create",
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/branches": {
+      "get": {
+        "operationId": "BranchController_list",
+        "responses": {
+          "200": {
+            "description": "Collection"
+          }
+        }
+      },
+      "post": {
+        "operationId": "BranchController_create",
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/notices": {
+      "get": {
+        "operationId": "NoticeController_list",
+        "responses": {
+          "200": {
+            "description": "Collection"
+          }
+        }
+      },
+      "post": {
+        "operationId": "NoticeController_create",
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "LoanRequest": {
+        "type": "object",
+        "properties": {
+          "bookId": {
+            "type": "string"
+          }
+        }
+      },
+      "LoanReceipt": {
+        "type": "object",
+        "properties": {
+          "loanId": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

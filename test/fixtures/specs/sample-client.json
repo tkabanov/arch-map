@@ -1,0 +1,53 @@
+{
+  "$schema": "../../../specs/schema/spec.schema.json",
+  "schemaVersion": "1.0.0",
+  "id": "sample-client",
+  "title": "Sample: client layer",
+  "requires": ["sample-core.json"],
+  "elements": [
+    {
+      "id": "ovl.actor.buyer",
+      "type": "actor",
+      "parent": null,
+      "name": "Customer",
+      "provenance": "authored"
+    },
+    {
+      "id": "ovl.sys.backend",
+      "type": "system",
+      "parent": null,
+      "name": "Backend",
+      "provenance": "authored",
+      "contains": ["app.api", "app.db"]
+    }
+  ],
+  "edges": [
+    {
+      "id": "ovl.actor.buyer>ovl.sys.backend:interacts",
+      "from": "ovl.actor.buyer",
+      "to": "ovl.sys.backend",
+      "channel": "interacts",
+      "label": "pays for an order",
+      "provenance": "authored"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "ovl.scenario.payment",
+      "title": "Pay for an order",
+      "steps": [
+        { "caption": "The participant pays for an order", "element": "ovl.actor.buyer" },
+        { "caption": "PayGate reports the payment", "from": "paygate", "to": "app.api", "channel": "webhook" }
+      ]
+    }
+  ],
+  "envelopes": {
+    "contracts/shop-backend.openapi.json#/components/schemas/PaymentWebhookDto": {
+      "title": "Payment",
+      "fields": { "object": "payment" }
+    }
+  },
+  "overrides": {
+    "paygate": { "name": "PayGate (payments)" }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "fxa",
+  "title": "fxa — a core and an overlay",
+  "documents": ["fxa-core.json", "fxa-overlay.json"],
+  "open": ["fxa-core.json", "fxa-overlay.json"],
+  "idPrefixes": ["fxa"],
+  "env": {
+    "FXA_ROOT": { "about": "the fxa checkout", "mustHave": "package.json" }
+  },
+  "generate": { "script": "generate.ts", "needs": ["FXA_ROOT"] },
+  "determinism": { "roots": ["FXA_ROOT"], "outputs": ["fxa-core.json"] }
+}

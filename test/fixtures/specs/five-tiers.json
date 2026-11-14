@@ -1,0 +1,99 @@
+{
+  "$schema": "../../../specs/schema/spec.schema.json",
+  "schemaVersion": "1.1.0",
+  "id": "five-tiers",
+  "title": "Fixture: five declared tiers, an event bus",
+  "tiers": [
+    { "id": "people", "title": "People" },
+    { "id": "ui", "title": "Interfaces" },
+    { "id": "service", "title": "Services" },
+    { "id": "async", "title": "Background work" },
+    { "id": "data", "title": "Data" }
+  ],
+  "elements": [
+    { "id": "f.user", "type": "actor", "parent": null, "name": "Customer", "provenance": "authored" },
+    { "id": "f.web", "type": "app", "parent": null, "name": "Shop", "tier": "ui", "provenance": "authored" },
+    { "id": "f.web.cart", "type": "component", "parent": "f.web", "name": "cart.ts", "provenance": "authored" },
+    { "id": "f.api", "type": "app", "parent": null, "name": "Shop API", "tier": "service", "provenance": "authored" },
+    {
+      "id": "f.api.orders",
+      "type": "component",
+      "parent": "f.api",
+      "name": "OrderService",
+      "provenance": "authored",
+      "methods": [{ "name": "place" }]
+    },
+    {
+      "id": "f.api.mailer",
+      "type": "component",
+      "parent": "f.api",
+      "name": "Mailer",
+      "provenance": "authored",
+      "methods": [{ "name": "orderPlaced" }]
+    },
+    {
+      "id": "f.api.events",
+      "type": "bus",
+      "parent": "f.api",
+      "name": "EventBus",
+      "technology": "in-process",
+      "provenance": "authored"
+    },
+    { "id": "f.worker", "type": "app", "parent": null, "name": "Worker", "tier": "async", "provenance": "authored" },
+    {
+      "id": "f.worker.invoices",
+      "type": "component",
+      "parent": "f.worker",
+      "name": "InvoiceJob",
+      "provenance": "authored",
+      "methods": [{ "name": "onOrderPlaced" }]
+    },
+    { "id": "f.db", "type": "datastore", "parent": null, "name": "Postgres", "provenance": "authored" },
+    { "id": "f.db.orders", "type": "table", "parent": "f.db", "name": "orders", "provenance": "authored" }
+  ],
+  "edges": [
+    { "id": "f.user>f.web:interacts", "from": "f.user", "to": "f.web", "channel": "interacts", "provenance": "authored" },
+    { "id": "f.web.cart>f.api.orders#place:rest", "from": "f.web.cart", "to": "f.api.orders", "toMethod": "place", "channel": "rest", "provenance": "authored" },
+    { "id": "f.api.orders#place>f.db.orders:write", "from": "f.api.orders", "fromMethod": "place", "to": "f.db.orders", "channel": "write", "provenance": "authored" },
+    {
+      "id": "f.api.orders#place>f.api.events#OrderPlaced:event",
+      "from": "f.api.orders",
+      "fromMethod": "place",
+      "to": "f.api.events",
+      "toMethod": "OrderPlaced",
+      "channel": "event",
+      "label": "order.placed",
+      "provenance": "authored"
+    },
+    {
+      "id": "f.api.events#OrderPlaced>f.api.mailer#orderPlaced:event",
+      "from": "f.api.events",
+      "fromMethod": "OrderPlaced",
+      "to": "f.api.mailer",
+      "toMethod": "orderPlaced",
+      "channel": "event",
+      "label": "order.placed",
+      "provenance": "authored"
+    },
+    {
+      "id": "f.api.events#OrderPlaced>f.worker.invoices#onOrderPlaced:event",
+      "from": "f.api.events",
+      "fromMethod": "OrderPlaced",
+      "to": "f.worker.invoices",
+      "toMethod": "onOrderPlaced",
+      "channel": "event",
+      "label": "order.placed",
+      "provenance": "authored"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "f.scenario.order",
+      "title": "Place an order",
+      "steps": [
+        { "caption": "The shop sends the order", "from": "f.web.cart", "to": "f.api.orders", "channel": "rest", "contract": { "doc": "contracts/five-tiers.schema.json", "request": "#/$defs/Order" } },
+        { "caption": "The order service tells the worker", "from": "f.api.orders", "to": "f.worker.invoices", "channel": "event", "contract": { "doc": "contracts/five-tiers.schema.json", "request": "#/$defs/OrderPlaced" } }
+      ]
+    }
+  ]
+}

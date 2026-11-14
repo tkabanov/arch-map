@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "arch-map:project:1",
+  "title": "An arch-map project: its spec documents, the env it reads, its generator, snapshots and checks",
+  "description": "<projects dir>/<name>/project.json (the projects dir: env ARCH_MAP_PROJECTS). Document paths are relative to the project's spec folder <projects dir>/<name>/specs/; script, guard and baseline paths to <projects dir>/<name>/. Read by scripts/lib/projects.ts.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "title", "documents", "open", "idPrefixes", "env", "generate", "determinism"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "name": { "description": "The project's folder name in the projects directory.", "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+    "title": { "description": "Shown in the viewer.", "type": "string", "minLength": 1 },
+    "theme": {
+      "description": "The viewer's look for this project (dark when unset). The page's ?theme=light|dark, ?accent=, ?accent2=, ?bg=, ?step= (hex without #) override it.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "base": { "enum": ["dark", "light"] },
+        "colors": {
+          "description": "Overrides of the base's colors: bg (page), panel, panel2 (raised surface), fg (text), muted (secondary text), line (borders), accent (selection, buttons, links), accentStrong (accent under text), step (scenario steps).",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": { "bg": { "$ref": "#/$defs/color" }, "panel": { "$ref": "#/$defs/color" }, "panel2": { "$ref": "#/$defs/color" }, "fg": { "$ref": "#/$defs/color" }, "muted": { "$ref": "#/$defs/color" }, "line": { "$ref": "#/$defs/color" }, "accent": { "$ref": "#/$defs/color" }, "accentStrong": { "$ref": "#/$defs/color" }, "step": { "$ref": "#/$defs/color" } }
+        },
+        "fonts": {
+          "description": "Font family names (IBM Plex, Manrope and JetBrains Mono are bundled; others must be installed where the map is viewed).",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": { "ui": { "type": "string", "minLength": 1 }, "label": { "type": "string", "minLength": 1 }, "code": { "type": "string", "minLength": 1 } }
+        }
+      }
+    },
+    "documents": { "description": "The whole checked set, in load order.", "$ref": "#/$defs/docList" },
+    "open": { "description": "What the map opens with: a subset of documents.", "$ref": "#/$defs/docList" },
+    "idPrefixes": { "description": "The first segment of this project's element ids (for the neutrality guard and reports; no core logic reads it).", "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" } },
+    "env": {
+      "description": "The environment variables this project reads (in .env.local).",
+      "type": "object",
+      "propertyNames": { "pattern": "^[A-Z][A-Z0-9_]*$" },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["about"],
+        "properties": {
+          "about": { "type": "string" },
+          "default": { "description": "Used when the variable is not set; ${OTHER} expands another variable of the project.", "type": "string" },
+          "mustHave": { "description": "A path that must exist under the directory the variable names.", "type": "string" }
+        }
+      }
+    },
+    "generate": { "$ref": "#/$defs/script" },
+    "snapshots": { "description": "Ways to refresh the committed inputs: kind → script.", "type": "object", "propertyNames": { "pattern": "^[a-z][a-z0-9-]*$" }, "additionalProperties": { "$ref": "#/$defs/script" } },
+    "determinism": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["roots", "outputs"],
+      "properties": {
+        "roots": { "description": "Env variables naming target checkouts whose git status must not change. The first is required; the rest are checked when they exist.", "type": "array", "items": { "type": "string" } },
+        "withoutEnv": { "description": "Removed from the generator's environment.", "type": "array", "items": { "type": "string" } },
+        "outputs": { "description": "Files under the project's spec folder that two runs must write byte-identical.", "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "withoutRunTime": { "description": "Outputs compared without their generatedAt and durationMs.", "type": "array", "items": { "type": "string" } },
+        "guard": { "description": "Folders the generator reads and must not change.", "type": "array", "items": { "type": "string" } }
+      }
+    }
+  },
+  "$defs": {
+    "color": { "type": "string", "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$" },
+    "docList": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\.json$" } },
+    "script": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["script"],
+      "properties": {
+        "script": { "description": "Relative to the project folder.", "type": "string" },
+        "args": { "description": "Default arguments, used when none are given on the command line.", "type": "array", "items": { "type": "string" } },
+        "needs": { "description": "Env variables that must be set (after defaults).", "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "index": {
+      "description": "<projects dir>/index.json: every project folder in switcher order, and the one the map opens (required when order is not empty).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["order"],
+      "properties": {
+        "$schema": { "type": "string" },
+        "default": { "type": "string" },
+        "order": { "type": "array", "uniqueItems": true, "items": { "type": "string" } }
+      }
+    }
+  }
+}

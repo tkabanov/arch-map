@@ -1,0 +1,33 @@
+{
+  "name": "library-nest",
+  "title": "Library Nest",
+  "documents": [
+    "library-nest.json"
+  ],
+  "open": [
+    "library-nest.json"
+  ],
+  "idPrefixes": [
+    "library"
+  ],
+  "env": {},
+  "generate": {
+    "script": "generate.ts"
+  },
+  "determinism": {
+    "roots": [],
+    "outputs": [
+      "library-nest.json",
+      "contracts/library.openapi.json",
+      "library-nest.unresolved.json"
+    ],
+    "guard": [
+      "target"
+    ]
+  },
+  "snapshots": {
+    "contracts": {
+      "script": "snapshot.ts"
+    }
+  }
+}

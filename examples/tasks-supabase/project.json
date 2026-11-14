@@ -1,0 +1,44 @@
+{
+  "name": "tasks-supabase",
+  "title": "Tasks Supabase",
+  "documents": [
+    "tasks-database.json",
+    "tasks-edge.json",
+    "tasks-web.json",
+    "tasks-client.json"
+  ],
+  "open": [
+    "tasks-database.json",
+    "tasks-edge.json",
+    "tasks-web.json",
+    "tasks-client.json"
+  ],
+  "idPrefixes": [
+    "tasks"
+  ],
+  "env": {},
+  "generate": {
+    "script": "generate.ts"
+  },
+  "determinism": {
+    "roots": [],
+    "outputs": [
+      "tasks-database.json",
+      "tasks-edge.json",
+      "tasks-web.json",
+      "tasks-client.json",
+      "contracts/tasks-edge.openapi.json",
+      "tasks-database.unresolved.json",
+      "tasks-edge.unresolved.json",
+      "tasks-web.unresolved.json"
+    ],
+    "guard": [
+      "target"
+    ]
+  },
+  "snapshots": {
+    "db": {
+      "script": "snapshot.ts"
+    }
+  }
+}

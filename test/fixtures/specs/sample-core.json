@@ -1,0 +1,116 @@
+{
+  "$schema": "../../../specs/schema/spec.schema.json",
+  "schemaVersion": "1.0.0",
+  "id": "sample-core",
+  "title": "Sample: extracted core",
+  "repos": {
+    "backend": {
+      "url": "https://git.example/shop-backend",
+      "commit": "0123456789abcdef0123456789abcdef01234567",
+      "blob": "https://git.example/shop-backend/blob/0123456789abcdef0123456789abcdef01234567/{file}#L{line}"
+    }
+  },
+  "elements": [
+    {
+      "id": "app.api",
+      "type": "app",
+      "parent": null,
+      "name": "shop-backend",
+      "tier": "service",
+      "technology": "NestJS",
+      "provenance": "extracted",
+      "source": { "repo": "backend", "file": "src/main.ts", "line": 1 },
+      "facets": { "nest.app": {} }
+    },
+    {
+      "id": "app.api.payment.payment_module",
+      "type": "module",
+      "parent": "app.api",
+      "name": "PaymentModule",
+      "provenance": "extracted",
+      "source": { "repo": "backend", "file": "src/modules/payment/payment.module.ts", "line": 12 },
+      "derivedFrom": { "rule": "folder", "value": "src/modules/payment" },
+      "confidence": "high"
+    },
+    {
+      "id": "app.api.payment.payment_module.payment_controller",
+      "type": "component",
+      "parent": "app.api.payment.payment_module",
+      "name": "PaymentController",
+      "provenance": "extracted",
+      "source": { "repo": "backend", "file": "src/modules/payment/payment.controller.ts", "line": 20 },
+      "methods": [
+        { "name": "webhook", "line": 41, "unresolved": [{ "expr": "this.handlers[kind]", "line": 44 }] }
+      ],
+      "facets": { "nest.controller": { "prefix": "payment" } }
+    },
+    {
+      "id": "app.api.payment.payment_module.payment_controller.post_payment_webhook",
+      "type": "endpoint",
+      "parent": "app.api.payment.payment_module.payment_controller",
+      "name": "POST /payment/webhook",
+      "provenance": "extracted",
+      "source": { "repo": "backend", "file": "src/modules/payment/payment.controller.ts", "line": 40 },
+      "handler": "webhook",
+      "http": { "method": "POST", "path": "/payment/webhook" },
+      "access": { "level": "public" },
+      "contract": {
+        "doc": "contracts/shop-backend.openapi.json",
+        "operationId": "PaymentController_webhook",
+        "request": "#/components/schemas/PaymentWebhookDto"
+      }
+    },
+    {
+      "id": "app.db",
+      "type": "datastore",
+      "parent": null,
+      "name": "MySQL",
+      "provenance": "extracted",
+      "source": { "repo": "backend", "file": "src/database/database.module.ts", "line": 8 },
+      "facets": { "mysql.database": {} }
+    },
+    {
+      "id": "app.db.payment_records",
+      "type": "table",
+      "parent": "app.db",
+      "name": "payment_records",
+      "provenance": "extracted",
+      "source": { "repo": "backend", "file": "src/models/payment-record.model.ts", "line": 9 },
+      "columns": [
+        { "name": "id", "type": "INTEGER", "nullable": false, "pk": true },
+        { "name": "payment_id", "type": "STRING", "nullable": true, "pk": false }
+      ],
+      "facets": { "sequelize.model": { "class": "PaymentRecord" } }
+    },
+    {
+      "id": "paygate",
+      "type": "external-system",
+      "parent": null,
+      "name": "PayGate",
+      "provenance": "declared",
+      "source": { "config": "scripts/config.ts#EXTERNALS.paygate" },
+      "facets": { "config.external": { "kind": "payment" } }
+    }
+  ],
+  "edges": [
+    {
+      "id": "app.api.payment.payment_module.payment_controller#webhook>app.db.payment_records:write",
+      "from": "app.api.payment.payment_module.payment_controller",
+      "fromMethod": "webhook",
+      "to": "app.db.payment_records",
+      "channel": "write",
+      "ops": ["update"],
+      "provenance": "extracted",
+      "source": { "repo": "backend", "file": "src/modules/payment/payment.controller.ts", "line": 47 }
+    },
+    {
+      "id": "paygate>app.api.payment.payment_module.payment_controller.post_payment_webhook:webhook",
+      "from": "paygate",
+      "to": "app.api.payment.payment_module.payment_controller.post_payment_webhook",
+      "channel": "webhook",
+      "provenance": "declared",
+      "source": { "config": "scripts/config.ts#INBOUND.paygate" },
+      "sites": [{ "repo": "backend", "file": "src/modules/payment/payment.controller.ts", "line": 40 }]
+    }
+  ]
+}

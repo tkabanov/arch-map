@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema/spec.schema.json",
+  "schemaVersion": "1.0.0",
+  "id": "fxa-core",
+  "title": "fxa: core",
+  "elements": [
+    { "id": "fxa.api", "type": "app", "parent": null, "name": "api", "tier": "service", "provenance": "authored" },
+    { "id": "fxa.api.svc", "type": "component", "parent": "fxa.api", "name": "svc", "provenance": "authored", "facets": { "fxa.widget": {} } }
+  ],
+  "edges": []
+}

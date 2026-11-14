@@ -1,0 +1,80 @@
+{
+  "name": "@arch-map/viewer",
+  "version": "1.0.0",
+  "description": "An interactive 3D map of a codebase's architecture, drawn from arch-map spec documents: mount() it into any element.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "unpkg": "./dist/arch-map.iife.js",
+  "jsdelivr": "./dist/arch-map.iife.js",
+  "typesVersions": {
+    "*": {
+      "element": [
+        "./dist/element.d.ts"
+      ],
+      "react": [
+        "./dist/react.d.ts"
+      ]
+    }
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./element": {
+      "types": "./dist/element.d.ts",
+      "import": "./dist/element.js",
+      "default": "./dist/element.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js",
+      "default": "./dist/react.js"
+    },
+    "./fonts.css": "./dist/fonts.css",
+    "./iife": "./dist/arch-map.iife.js",
+    "./schema/*": "./schema/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "schema"
+  ],
+  "sideEffects": [
+    "./dist/element.js",
+    "./dist/arch-map.iife.js",
+    "*.css"
+  ],
+  "dependencies": {
+    "three": "~0.186.1"
+  },
+  "peerDependencies": {
+    "@types/react": ">=18",
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
+  },
+  "keywords": [
+    "architecture",
+    "diagram",
+    "3d",
+    "three",
+    "web-component"
+  ],
+  "scripts": {
+    "prepack": "node ../../scripts/build-lib.ts"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

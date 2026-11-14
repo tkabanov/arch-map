@@ -1,0 +1,37 @@
+{
+    // Type check, no emit: `npm run check:tsc` (scripts/check-tsc.ts, a ratchet over quality/tsc-baseline.json; it runs
+    // this project and tsconfig.viewer.json). The code is moving to TypeScript run without a build step (Node type
+    // stripping, Vite) — docs/code-quality.md, "TypeScript conventions". This project is the Node + pure-core side:
+    // no DOM in `lib`, so the core (viewer/src/core/) cannot use it.
+    // - `.ts` files: strict, the goal is 0 errors per migrated file.
+    // - not yet migrated `.js` (checkJs): strict too, their debt is the ratchet's baseline. Since phase 2 the only ones
+    //   checked here are the viewer modules the tests import (viewer/src/*.js outside the core).
+    // Spec types: types/spec.d.ts (generated from the schema), hand-written shapes: types/core.ts.
+    "compilerOptions": {
+        "target": "ES2023",
+        "lib": ["ES2023"],
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
+        "allowJs": true,
+        "checkJs": true,
+        "noEmit": true,
+        "strict": true,
+        "skipLibCheck": true,
+        "types": ["node"],
+        "resolveJsonModule": true,
+        // what Node's type stripping and Vite accept: erasable syntax only, imports as written, `.ts` in specifiers
+        "erasableSyntaxOnly": true,
+        "verbatimModuleSyntax": true,
+        "allowImportingTsExtensions": true
+    },
+    "include": [
+        "viewer/src/core/**/*.ts",
+        "scripts/**/*.ts",
+        "test/**/*.ts",
+        "types/**/*.ts"
+    ],
+    // sample code the tests read as input, not part of arch-map; the browser checks need the DOM inside page.evaluate and
+    // have their own project (test/browser/tsconfig.json). The projects dir (env ARCH_MAP_PROJECTS) has its own
+    // tsconfig.json extending this one (`arch-map/tsconfig.json`); scripts/check-tsc.ts runs it too.
+    "exclude": ["test/fixtures/**", "test/browser/**"]
+}

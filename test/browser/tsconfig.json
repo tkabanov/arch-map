@@ -1,0 +1,12 @@
+{
+    // The browser checks (test/browser/): Node code that drives Chromium, with DOM code inside page.evaluate — so both
+    // the DOM and Node's types. Excluded from the root tsconfig.json (no DOM there); scripts/check-tsc.ts runs this
+    // project too. docs/browser-checks.md.
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "lib": ["ES2023", "DOM", "DOM.Iterable"],
+        "types": ["node"]
+    },
+    "include": ["./**/*.ts"],
+    "exclude": []
+}

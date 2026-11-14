@@ -1,0 +1,2011 @@
+{
+  "$schema": "../schema/spec.schema.json",
+  "edges": [
+    {
+      "channel": "schedule",
+      "from": "tasks.db.functions.pg_cron",
+      "fromMethod": "archive_empty_comments",
+      "id": "tasks.db.functions.pg_cron#archive_empty_comments>tasks.db.functions.task.archive_comments#archive_comments:schedule",
+      "label": "0 3 * * *",
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 688,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.functions.task.archive_comments",
+      "toMethod": "archive_comments"
+    },
+    {
+      "channel": "write",
+      "from": "tasks.db.functions.task.archive_comments",
+      "fromMethod": "archive_comments",
+      "id": "tasks.db.functions.task.archive_comments#archive_comments>tasks.db.task.comments:write",
+      "ops": [
+        "delete"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 526,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.comments"
+    },
+    {
+      "channel": "write",
+      "from": "tasks.db.functions.task.complete_task",
+      "fromMethod": "complete_task",
+      "id": "tasks.db.functions.task.complete_task#complete_task>tasks.db.task.tasks:write",
+      "ops": [
+        "update"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 511,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.tasks"
+    },
+    {
+      "channel": "write",
+      "from": "tasks.db.functions.task.record_task_change",
+      "fromMethod": "record_task_change",
+      "id": "tasks.db.functions.task.record_task_change#record_task_change>tasks.db.task.comments:write",
+      "ops": [
+        "insert"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 541,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.comments"
+    },
+    {
+      "channel": "read",
+      "from": "tasks.db.functions.task.task_count",
+      "fromMethod": "task_count",
+      "id": "tasks.db.functions.task.task_count#task_count>tasks.db.task.tasks:read",
+      "ops": [
+        "select"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 496,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.tasks"
+    },
+    {
+      "channel": "references",
+      "from": "tasks.db.task.boards",
+      "id": "tasks.db.task.boards>tasks.db.task.teams:references",
+      "ops": [
+        "team_id"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 171,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.teams"
+    },
+    {
+      "channel": "references",
+      "from": "tasks.db.task.comments",
+      "id": "tasks.db.task.comments>tasks.db.task.tasks:references",
+      "ops": [
+        "task_id"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 303,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.tasks"
+    },
+    {
+      "channel": "references",
+      "from": "tasks.db.task.labels",
+      "id": "tasks.db.task.labels>tasks.db.task.teams:references",
+      "ops": [
+        "team_id"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 361,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.teams"
+    },
+    {
+      "channel": "references",
+      "from": "tasks.db.task.task_labels",
+      "id": "tasks.db.task.task_labels>tasks.db.task.labels:references",
+      "ops": [
+        "label_id"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 419,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.labels"
+    },
+    {
+      "channel": "references",
+      "from": "tasks.db.task.task_labels",
+      "id": "tasks.db.task.task_labels>tasks.db.task.tasks:references",
+      "ops": [
+        "task_id"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 419,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.tasks"
+    },
+    {
+      "channel": "trigger",
+      "facets": {
+        "pg.trigger": {
+          "triggers": [
+            {
+              "definition": "CREATE TRIGGER task_changed AFTER UPDATE ON public.tasks FOR EACH ROW EXECUTE FUNCTION public.record_task_change();",
+              "enabled": true,
+              "name": "task_changed"
+            }
+          ]
+        }
+      },
+      "from": "tasks.db.task.tasks",
+      "id": "tasks.db.task.tasks>tasks.db.functions.task.record_task_change#record_task_change:trigger",
+      "label": "task_changed: after update, for each row",
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 556,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.functions.task.record_task_change",
+      "toMethod": "record_task_change"
+    },
+    {
+      "channel": "references",
+      "from": "tasks.db.task.tasks",
+      "id": "tasks.db.task.tasks>tasks.db.task.boards:references",
+      "ops": [
+        "board_id"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 229,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.boards"
+    },
+    {
+      "channel": "references",
+      "from": "tasks.db.task.tasks",
+      "id": "tasks.db.task.tasks>tasks.db.task.profiles:references",
+      "ops": [
+        "assignee_id"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 229,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.profiles"
+    },
+    {
+      "channel": "references",
+      "from": "tasks.db.task.team_members",
+      "id": "tasks.db.task.team_members>tasks.db.task.profiles:references",
+      "ops": [
+        "profile_id"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 97,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.profiles"
+    },
+    {
+      "channel": "references",
+      "from": "tasks.db.task.team_members",
+      "id": "tasks.db.task.team_members>tasks.db.task.teams:references",
+      "ops": [
+        "team_id"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 97,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.teams"
+    },
+    {
+      "channel": "rest",
+      "from": "tasks.platform.gateway",
+      "id": "tasks.platform.gateway>tasks.platform.auth:rest",
+      "label": "/auth/v1",
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/config.toml",
+        "line": 4,
+        "repo": "taskcode"
+      },
+      "to": "tasks.platform.auth"
+    },
+    {
+      "channel": "rest",
+      "from": "tasks.platform.gateway",
+      "id": "tasks.platform.gateway>tasks.platform.graphql:rest",
+      "provenance": "declared",
+      "source": {
+        "config": "examples/tasks-supabase/config.ts#SUPABASE_SERVICES.graphql"
+      },
+      "to": "tasks.platform.graphql"
+    },
+    {
+      "channel": "rest",
+      "from": "tasks.platform.gateway",
+      "id": "tasks.platform.gateway>tasks.platform.meta:rest",
+      "provenance": "declared",
+      "source": {
+        "config": "examples/tasks-supabase/config.ts#SUPABASE_SERVICES.meta"
+      },
+      "to": "tasks.platform.meta"
+    },
+    {
+      "channel": "rest",
+      "from": "tasks.platform.gateway",
+      "id": "tasks.platform.gateway>tasks.platform.realtime:rest",
+      "label": "/realtime/v1",
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/config.toml",
+        "line": 8,
+        "repo": "taskcode"
+      },
+      "to": "tasks.platform.realtime"
+    },
+    {
+      "channel": "rest",
+      "from": "tasks.platform.gateway",
+      "id": "tasks.platform.gateway>tasks.platform.rest:rest",
+      "label": "/rest/v1",
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/config.toml",
+        "line": 1,
+        "repo": "taskcode"
+      },
+      "to": "tasks.platform.rest"
+    },
+    {
+      "channel": "rest",
+      "from": "tasks.platform.gateway",
+      "id": "tasks.platform.gateway>tasks.platform.storage:rest",
+      "label": "/storage/v1",
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/config.toml",
+        "line": 6,
+        "repo": "taskcode"
+      },
+      "to": "tasks.platform.storage"
+    },
+    {
+      "channel": "read",
+      "from": "tasks.platform.graphql",
+      "id": "tasks.platform.graphql>tasks.db:read",
+      "label": "graphql.resolve() inside Postgres, under RLS",
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/config.toml",
+        "line": 3,
+        "repo": "taskcode"
+      },
+      "to": "tasks.db"
+    },
+    {
+      "channel": "write",
+      "from": "tasks.platform.graphql",
+      "id": "tasks.platform.graphql>tasks.db:write",
+      "label": "graphql.resolve() inside Postgres, under RLS",
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/config.toml",
+        "line": 3,
+        "repo": "taskcode"
+      },
+      "to": "tasks.db"
+    },
+    {
+      "channel": "read",
+      "from": "tasks.platform.meta",
+      "id": "tasks.platform.meta>tasks.db:read",
+      "ops": [
+        "catalog"
+      ],
+      "provenance": "declared",
+      "source": {
+        "config": "examples/tasks-supabase/config.ts#SUPABASE_SERVICES.meta"
+      },
+      "to": "tasks.db"
+    },
+    {
+      "channel": "write",
+      "from": "tasks.platform.meta",
+      "id": "tasks.platform.meta>tasks.db:write",
+      "ops": [
+        "DDL",
+        "roles"
+      ],
+      "provenance": "declared",
+      "source": {
+        "config": "examples/tasks-supabase/config.ts#SUPABASE_SERVICES.meta"
+      },
+      "to": "tasks.db"
+    },
+    {
+      "channel": "read",
+      "from": "tasks.platform.pooler",
+      "id": "tasks.platform.pooler>tasks.db:read",
+      "label": "pooled connections",
+      "provenance": "declared",
+      "source": {
+        "config": "examples/tasks-supabase/config.ts#SUPABASE_SERVICES.pooler"
+      },
+      "to": "tasks.db"
+    },
+    {
+      "channel": "write",
+      "from": "tasks.platform.pooler",
+      "id": "tasks.platform.pooler>tasks.db:write",
+      "label": "pooled connections",
+      "provenance": "declared",
+      "source": {
+        "config": "examples/tasks-supabase/config.ts#SUPABASE_SERVICES.pooler"
+      },
+      "to": "tasks.db"
+    },
+    {
+      "access": {
+        "level": "authenticated",
+        "policies": [
+          "tasks_team_access"
+        ]
+      },
+      "channel": "read",
+      "from": "tasks.platform.realtime",
+      "id": "tasks.platform.realtime>tasks.db.task.tasks:read",
+      "label": "changes (publication supabase_realtime)",
+      "ops": [
+        "select"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 696,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.tasks"
+    },
+    {
+      "access": {
+        "level": "authenticated"
+      },
+      "channel": "rest",
+      "from": "tasks.platform.rest",
+      "id": "tasks.platform.rest>tasks.db.functions.task.archive_comments.post_rest_v1_rpc_archive_comments:rest",
+      "label": "rpc archive_comments",
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 526,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.functions.task.archive_comments.post_rest_v1_rpc_archive_comments"
+    },
+    {
+      "access": {
+        "level": "authenticated"
+      },
+      "channel": "rest",
+      "from": "tasks.platform.rest",
+      "id": "tasks.platform.rest>tasks.db.functions.task.complete_task.post_rest_v1_rpc_complete_task:rest",
+      "label": "rpc complete_task",
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 511,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.functions.task.complete_task.post_rest_v1_rpc_complete_task"
+    },
+    {
+      "access": {
+        "level": "authenticated"
+      },
+      "channel": "rest",
+      "from": "tasks.platform.rest",
+      "id": "tasks.platform.rest>tasks.db.functions.task.task_count.post_rest_v1_rpc_task_count:rest",
+      "label": "rpc task_count",
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 496,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.functions.task.task_count.post_rest_v1_rpc_task_count"
+    },
+    {
+      "access": {
+        "level": "authenticated",
+        "policies": [
+          "boards_team_access"
+        ]
+      },
+      "channel": "read",
+      "from": "tasks.platform.rest",
+      "id": "tasks.platform.rest>tasks.db.task.boards:read",
+      "ops": [
+        "select"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 171,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.boards"
+    },
+    {
+      "access": {
+        "level": "authenticated",
+        "policies": [
+          "boards_team_access"
+        ]
+      },
+      "channel": "write",
+      "from": "tasks.platform.rest",
+      "id": "tasks.platform.rest>tasks.db.task.boards:write",
+      "ops": [
+        "delete",
+        "insert",
+        "update"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 171,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.boards"
+    },
+    {
+      "access": {
+        "level": "authenticated",
+        "policies": [
+          "comments_team_access"
+        ]
+      },
+      "channel": "read",
+      "from": "tasks.platform.rest",
+      "id": "tasks.platform.rest>tasks.db.task.comments:read",
+      "ops": [
+        "select"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 303,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.comments"
+    },
+    {
+      "access": {
+        "level": "authenticated",
+        "policies": [
+          "comments_team_access"
+        ]
+      },
+      "channel": "write",
+      "from": "tasks.platform.rest",
+      "id": "tasks.platform.rest>tasks.db.task.comments:write",
+      "ops": [
+        "delete",
+        "insert",
+        "update"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 303,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.comments"
+    },
+    {
+      "access": {
+        "level": "authenticated",
+        "policies": [
+          "labels_team_access"
+        ]
+      },
+      "channel": "read",
+      "from": "tasks.platform.rest",
+      "id": "tasks.platform.rest>tasks.db.task.labels:read",
+      "ops": [
+        "select"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 361,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.labels"
+    },
+    {
+      "access": {
+        "level": "authenticated",
+        "policies": [
+          "labels_team_access"
+        ]
+      },
+      "channel": "write",
+      "from": "tasks.platform.rest",
+      "id": "tasks.platform.rest>tasks.db.task.labels:write",
+      "ops": [
+        "delete",
+        "insert",
+        "update"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 361,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.labels"
+    },
+    {
+      "access": {
+        "level": "authenticated",
+        "policies": [
+          "profiles_team_access"
+        ]
+      },
+      "channel": "read",
+      "from": "tasks.platform.rest",
+      "id": "tasks.platform.rest>tasks.db.task.profiles:read",
+      "ops": [
+        "select"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 56,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.profiles"
+    },
+    {
+      "access": {
+        "level": "authenticated",
+        "policies": [
+          "profiles_team_access"
+        ]
+      },
+      "channel": "write",
+      "from": "tasks.platform.rest",
+      "id": "tasks.platform.rest>tasks.db.task.profiles:write",
+      "ops": [
+        "delete",
+        "insert",
+        "update"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 56,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.profiles"
+    },
+    {
+      "access": {
+        "level": "authenticated",
+        "policies": [
+          "task_labels_team_access"
+        ]
+      },
+      "channel": "read",
+      "from": "tasks.platform.rest",
+      "id": "tasks.platform.rest>tasks.db.task.task_labels:read",
+      "ops": [
+        "select"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 419,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.task_labels"
+    },
+    {
+      "access": {
+        "level": "authenticated",
+        "policies": [
+          "task_labels_team_access"
+        ]
+      },
+      "channel": "write",
+      "from": "tasks.platform.rest",
+      "id": "tasks.platform.rest>tasks.db.task.task_labels:write",
+      "ops": [
+        "delete",
+        "insert",
+        "update"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 419,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.task_labels"
+    },
+    {
+      "access": {
+        "level": "authenticated",
+        "policies": [
+          "tasks_team_access"
+        ]
+      },
+      "channel": "read",
+      "from": "tasks.platform.rest",
+      "id": "tasks.platform.rest>tasks.db.task.tasks:read",
+      "ops": [
+        "select"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 229,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.tasks"
+    },
+    {
+      "access": {
+        "level": "authenticated",
+        "policies": [
+          "tasks_team_access"
+        ]
+      },
+      "channel": "write",
+      "from": "tasks.platform.rest",
+      "id": "tasks.platform.rest>tasks.db.task.tasks:write",
+      "ops": [
+        "delete",
+        "insert",
+        "update"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 229,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.tasks"
+    },
+    {
+      "access": {
+        "level": "authenticated",
+        "policies": [
+          "team_members_team_access"
+        ]
+      },
+      "channel": "read",
+      "from": "tasks.platform.rest",
+      "id": "tasks.platform.rest>tasks.db.task.team_members:read",
+      "ops": [
+        "select"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 97,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.team_members"
+    },
+    {
+      "access": {
+        "level": "authenticated",
+        "policies": [
+          "team_members_team_access"
+        ]
+      },
+      "channel": "write",
+      "from": "tasks.platform.rest",
+      "id": "tasks.platform.rest>tasks.db.task.team_members:write",
+      "ops": [
+        "delete",
+        "insert",
+        "update"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 97,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.team_members"
+    },
+    {
+      "access": {
+        "level": "authenticated",
+        "policies": [
+          "teams_team_access"
+        ]
+      },
+      "channel": "read",
+      "from": "tasks.platform.rest",
+      "id": "tasks.platform.rest>tasks.db.task.teams:read",
+      "ops": [
+        "select"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 15,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.teams"
+    },
+    {
+      "access": {
+        "level": "authenticated",
+        "policies": [
+          "teams_team_access"
+        ]
+      },
+      "channel": "write",
+      "from": "tasks.platform.rest",
+      "id": "tasks.platform.rest>tasks.db.task.teams:write",
+      "ops": [
+        "delete",
+        "insert",
+        "update"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 15,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.task.teams"
+    },
+    {
+      "channel": "read",
+      "from": "tasks.platform.storage",
+      "id": "tasks.platform.storage>tasks.db.storage.buckets:read",
+      "label": "file metadata",
+      "ops": [
+        "select"
+      ],
+      "provenance": "declared",
+      "source": {
+        "config": "examples/tasks-supabase/config.ts#SUPABASE_SERVICES.storage"
+      },
+      "to": "tasks.db.storage.buckets"
+    },
+    {
+      "channel": "write",
+      "from": "tasks.platform.storage",
+      "id": "tasks.platform.storage>tasks.db.storage.buckets:write",
+      "label": "file metadata",
+      "ops": [
+        "delete",
+        "insert",
+        "update"
+      ],
+      "provenance": "declared",
+      "source": {
+        "config": "examples/tasks-supabase/config.ts#SUPABASE_SERVICES.storage"
+      },
+      "to": "tasks.db.storage.buckets"
+    },
+    {
+      "channel": "read",
+      "from": "tasks.platform.storage",
+      "id": "tasks.platform.storage>tasks.db.storage.objects:read",
+      "label": "file metadata",
+      "ops": [
+        "select"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 663,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.storage.objects"
+    },
+    {
+      "channel": "write",
+      "from": "tasks.platform.storage",
+      "id": "tasks.platform.storage>tasks.db.storage.objects:write",
+      "label": "file metadata",
+      "ops": [
+        "delete",
+        "insert",
+        "update"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 663,
+        "repo": "snapshot"
+      },
+      "to": "tasks.db.storage.objects"
+    },
+    {
+      "access": {
+        "level": "authenticated",
+        "policies": [
+          "attachment_access"
+        ]
+      },
+      "channel": "read",
+      "from": "tasks.platform.storage",
+      "id": "tasks.platform.storage>tasks.files.attachments:read",
+      "ops": [
+        "select"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 702,
+        "repo": "snapshot"
+      },
+      "to": "tasks.files.attachments"
+    },
+    {
+      "access": {
+        "level": "authenticated",
+        "policies": [
+          "attachment_access"
+        ]
+      },
+      "channel": "write",
+      "from": "tasks.platform.storage",
+      "id": "tasks.platform.storage>tasks.files.attachments:write",
+      "ops": [
+        "delete",
+        "insert",
+        "update"
+      ],
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 702,
+        "repo": "snapshot"
+      },
+      "to": "tasks.files.attachments"
+    },
+    {
+      "channel": "rest",
+      "from": "tasks.platform.studio",
+      "id": "tasks.platform.studio>tasks.platform.meta:rest",
+      "label": "manages the database",
+      "provenance": "declared",
+      "source": {
+        "config": "examples/tasks-supabase/config.ts#SUPABASE_SERVICES.studio"
+      },
+      "to": "tasks.platform.meta"
+    }
+  ],
+  "elements": [
+    {
+      "description": "The Team tasks database, from a read-only snapshot of demo (2026-01-01, last migration null).",
+      "facets": {
+        "pg.snapshot": {
+          "appliedMigrations": 0,
+          "env": "demo",
+          "lastMigration": null,
+          "takenAt": "2026-01-01T00:00:00Z"
+        }
+      },
+      "id": "tasks.db",
+      "name": "Postgres",
+      "parent": null,
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 15,
+        "repo": "snapshot"
+      },
+      "technology": "Postgres 17 (Supabase)",
+      "type": "datastore"
+    },
+    {
+      "description": "Logic inside the database: functions the Data API (PostgREST) serves as RPCs, trigger functions, and what pg_cron runs.",
+      "id": "tasks.db.functions",
+      "name": "Functions",
+      "parent": "tasks.db",
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 496,
+        "repo": "snapshot"
+      },
+      "technology": "PL/pgSQL, SQL",
+      "type": "module"
+    },
+    {
+      "description": "Jobs on a schedule inside Postgres: SQL ones run a function, HTTP ones call an Edge Function through pg_net.",
+      "facets": {
+        "pg.cron": {
+          "jobs": [
+            {
+              "active": true,
+              "method": "archive_empty_comments",
+              "name": "archive-empty-comments",
+              "schedule": "0 3 * * *"
+            }
+          ]
+        }
+      },
+      "id": "tasks.db.functions.pg_cron",
+      "name": "pg_cron",
+      "parent": "tasks.db.functions",
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 688,
+        "repo": "snapshot"
+      },
+      "technology": "pg_cron",
+      "type": "job"
+    },
+    {
+      "confidence": "medium",
+      "derivedFrom": {
+        "rule": "prefix",
+        "value": "task"
+      },
+      "description": "Functions about «task»: by a word of their name, else by the table they use most.",
+      "id": "tasks.db.functions.task",
+      "name": "task",
+      "parent": "tasks.db.functions",
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 526,
+        "repo": "snapshot"
+      },
+      "type": "module"
+    },
+    {
+      "facets": {
+        "pg.function": {
+          "executableBy": [
+            "authenticated"
+          ],
+          "kind": "f",
+          "language": "sql",
+          "schema": "public",
+          "signatures": [
+            "archive_comments() → void"
+          ],
+          "volatility": "v"
+        }
+      },
+      "id": "tasks.db.functions.task.archive_comments",
+      "methods": [
+        {
+          "name": "archive_comments"
+        }
+      ],
+      "name": "archive_comments",
+      "parent": "tasks.db.functions.task",
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 526,
+        "repo": "snapshot"
+      },
+      "technology": "SQL function",
+      "type": "component"
+    },
+    {
+      "access": {
+        "level": "authenticated"
+      },
+      "handler": "archive_comments",
+      "http": {
+        "method": "POST",
+        "path": "/rest/v1/rpc/archive_comments"
+      },
+      "id": "tasks.db.functions.task.archive_comments.post_rest_v1_rpc_archive_comments",
+      "name": "RPC archive_comments",
+      "parent": "tasks.db.functions.task.archive_comments",
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 526,
+        "repo": "snapshot"
+      },
+      "type": "endpoint"
+    },
+    {
+      "facets": {
+        "pg.function": {
+          "executableBy": [
+            "authenticated"
+          ],
+          "kind": "f",
+          "language": "sql",
+          "schema": "public",
+          "signatures": [
+            "complete_task(task_id uuid) → void"
+          ],
+          "volatility": "v"
+        }
+      },
+      "id": "tasks.db.functions.task.complete_task",
+      "methods": [
+        {
+          "name": "complete_task"
+        }
+      ],
+      "name": "complete_task",
+      "parent": "tasks.db.functions.task",
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 511,
+        "repo": "snapshot"
+      },
+      "technology": "SQL function",
+      "type": "component"
+    },
+    {
+      "access": {
+        "level": "authenticated"
+      },
+      "handler": "complete_task",
+      "http": {
+        "method": "POST",
+        "path": "/rest/v1/rpc/complete_task"
+      },
+      "id": "tasks.db.functions.task.complete_task.post_rest_v1_rpc_complete_task",
+      "name": "RPC complete_task",
+      "parent": "tasks.db.functions.task.complete_task",
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 511,
+        "repo": "snapshot"
+      },
+      "type": "endpoint"
+    },
+    {
+      "facets": {
+        "pg.function": {
+          "kind": "f",
+          "language": "plpgsql",
+          "schema": "public",
+          "signatures": [
+            "record_task_change() → trigger"
+          ],
+          "volatility": "v"
+        }
+      },
+      "id": "tasks.db.functions.task.record_task_change",
+      "methods": [
+        {
+          "name": "record_task_change"
+        }
+      ],
+      "name": "record_task_change",
+      "parent": "tasks.db.functions.task",
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 541,
+        "repo": "snapshot"
+      },
+      "technology": "PL/pgSQL function",
+      "type": "component"
+    },
+    {
+      "facets": {
+        "pg.function": {
+          "executableBy": [
+            "authenticated"
+          ],
+          "kind": "f",
+          "language": "sql",
+          "schema": "public",
+          "signatures": [
+            "task_count() → bigint"
+          ],
+          "volatility": "v"
+        }
+      },
+      "id": "tasks.db.functions.task.task_count",
+      "methods": [
+        {
+          "name": "task_count"
+        }
+      ],
+      "name": "task_count",
+      "parent": "tasks.db.functions.task",
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 496,
+        "repo": "snapshot"
+      },
+      "technology": "SQL function",
+      "type": "component"
+    },
+    {
+      "access": {
+        "level": "authenticated"
+      },
+      "handler": "task_count",
+      "http": {
+        "method": "POST",
+        "path": "/rest/v1/rpc/task_count"
+      },
+      "id": "tasks.db.functions.task.task_count.post_rest_v1_rpc_task_count",
+      "name": "RPC task_count",
+      "parent": "tasks.db.functions.task.task_count",
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 496,
+        "repo": "snapshot"
+      },
+      "type": "endpoint"
+    },
+    {
+      "confidence": "high",
+      "context": true,
+      "derivedFrom": {
+        "rule": "schema",
+        "value": "storage"
+      },
+      "description": "Supabase Storage's schema: metadata of buckets and objects.",
+      "id": "tasks.db.storage",
+      "name": "storage",
+      "parent": "tasks.db",
+      "provenance": "declared",
+      "source": {
+        "config": "examples/tasks-supabase/config.ts#SUPABASE_SERVICES.storage"
+      },
+      "type": "module"
+    },
+    {
+      "context": true,
+      "description": "One row per bucket.",
+      "id": "tasks.db.storage.buckets",
+      "name": "buckets",
+      "parent": "tasks.db.storage",
+      "provenance": "declared",
+      "source": {
+        "config": "examples/tasks-supabase/config.ts#SUPABASE_SERVICES.storage"
+      },
+      "type": "table"
+    },
+    {
+      "context": true,
+      "description": "One row per stored file; its RLS policies decide access to files.",
+      "id": "tasks.db.storage.objects",
+      "name": "objects",
+      "parent": "tasks.db.storage",
+      "provenance": "declared",
+      "source": {
+        "config": "examples/tasks-supabase/config.ts#SUPABASE_SERVICES.storage"
+      },
+      "type": "table"
+    },
+    {
+      "confidence": "medium",
+      "derivedFrom": {
+        "rule": "prefix",
+        "value": "task"
+      },
+      "description": "Tables about «task» (the first word of their name).",
+      "id": "tasks.db.task",
+      "name": "task",
+      "parent": "tasks.db",
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 171,
+        "repo": "snapshot"
+      },
+      "type": "module"
+    },
+    {
+      "columns": [
+        {
+          "name": "id",
+          "nullable": false,
+          "pk": true,
+          "type": "uuid"
+        },
+        {
+          "name": "title",
+          "nullable": true,
+          "pk": false,
+          "type": "text"
+        },
+        {
+          "name": "team_id",
+          "nullable": true,
+          "pk": false,
+          "type": "uuid"
+        }
+      ],
+      "facets": {
+        "pg.rls": {
+          "policies": [
+            {
+              "command": "all",
+              "name": "boards_team_access",
+              "permissive": true,
+              "roles": [
+                "authenticated"
+              ],
+              "using": "auth.uid() IS NOT NULL",
+              "withCheck": "auth.uid() IS NOT NULL"
+            }
+          ]
+        },
+        "pg.table": {
+          "grants": {
+            "authenticated": [
+              "select",
+              "insert",
+              "update",
+              "delete"
+            ]
+          },
+          "kind": "r",
+          "rls": true,
+          "schema": "public"
+        }
+      },
+      "id": "tasks.db.task.boards",
+      "name": "boards",
+      "parent": "tasks.db.task",
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 171,
+        "repo": "snapshot"
+      },
+      "type": "table"
+    },
+    {
+      "columns": [
+        {
+          "name": "id",
+          "nullable": false,
+          "pk": true,
+          "type": "uuid"
+        },
+        {
+          "name": "title",
+          "nullable": true,
+          "pk": false,
+          "type": "text"
+        },
+        {
+          "name": "task_id",
+          "nullable": true,
+          "pk": false,
+          "type": "uuid"
+        }
+      ],
+      "facets": {
+        "pg.rls": {
+          "policies": [
+            {
+              "command": "all",
+              "name": "comments_team_access",
+              "permissive": true,
+              "roles": [
+                "authenticated"
+              ],
+              "using": "auth.uid() IS NOT NULL",
+              "withCheck": "auth.uid() IS NOT NULL"
+            }
+          ]
+        },
+        "pg.table": {
+          "grants": {
+            "authenticated": [
+              "select",
+              "insert",
+              "update",
+              "delete"
+            ]
+          },
+          "kind": "r",
+          "rls": true,
+          "schema": "public"
+        }
+      },
+      "id": "tasks.db.task.comments",
+      "name": "comments",
+      "parent": "tasks.db.task",
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 303,
+        "repo": "snapshot"
+      },
+      "type": "table"
+    },
+    {
+      "columns": [
+        {
+          "name": "id",
+          "nullable": false,
+          "pk": true,
+          "type": "uuid"
+        },
+        {
+          "name": "title",
+          "nullable": true,
+          "pk": false,
+          "type": "text"
+        },
+        {
+          "name": "team_id",
+          "nullable": true,
+          "pk": false,
+          "type": "uuid"
+        }
+      ],
+      "facets": {
+        "pg.rls": {
+          "policies": [
+            {
+              "command": "all",
+              "name": "labels_team_access",
+              "permissive": true,
+              "roles": [
+                "authenticated"
+              ],
+              "using": "auth.uid() IS NOT NULL",
+              "withCheck": "auth.uid() IS NOT NULL"
+            }
+          ]
+        },
+        "pg.table": {
+          "grants": {
+            "authenticated": [
+              "select",
+              "insert",
+              "update",
+              "delete"
+            ]
+          },
+          "kind": "r",
+          "rls": true,
+          "schema": "public"
+        }
+      },
+      "id": "tasks.db.task.labels",
+      "name": "labels",
+      "parent": "tasks.db.task",
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 361,
+        "repo": "snapshot"
+      },
+      "type": "table"
+    },
+    {
+      "columns": [
+        {
+          "name": "id",
+          "nullable": false,
+          "pk": true,
+          "type": "uuid"
+        },
+        {
+          "name": "title",
+          "nullable": true,
+          "pk": false,
+          "type": "text"
+        }
+      ],
+      "facets": {
+        "pg.rls": {
+          "policies": [
+            {
+              "command": "all",
+              "name": "profiles_team_access",
+              "permissive": true,
+              "roles": [
+                "authenticated"
+              ],
+              "using": "auth.uid() IS NOT NULL",
+              "withCheck": "auth.uid() IS NOT NULL"
+            }
+          ]
+        },
+        "pg.table": {
+          "grants": {
+            "authenticated": [
+              "select",
+              "insert",
+              "update",
+              "delete"
+            ]
+          },
+          "kind": "r",
+          "rls": true,
+          "schema": "public"
+        }
+      },
+      "id": "tasks.db.task.profiles",
+      "name": "profiles",
+      "parent": "tasks.db.task",
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 56,
+        "repo": "snapshot"
+      },
+      "type": "table"
+    },
+    {
+      "columns": [
+        {
+          "name": "id",
+          "nullable": false,
+          "pk": true,
+          "type": "uuid"
+        },
+        {
+          "name": "title",
+          "nullable": true,
+          "pk": false,
+          "type": "text"
+        },
+        {
+          "name": "task_id",
+          "nullable": true,
+          "pk": false,
+          "type": "uuid"
+        },
+        {
+          "name": "label_id",
+          "nullable": true,
+          "pk": false,
+          "type": "uuid"
+        }
+      ],
+      "facets": {
+        "pg.rls": {
+          "policies": [
+            {
+              "command": "all",
+              "name": "task_labels_team_access",
+              "permissive": true,
+              "roles": [
+                "authenticated"
+              ],
+              "using": "auth.uid() IS NOT NULL",
+              "withCheck": "auth.uid() IS NOT NULL"
+            }
+          ]
+        },
+        "pg.table": {
+          "grants": {
+            "authenticated": [
+              "select",
+              "insert",
+              "update",
+              "delete"
+            ]
+          },
+          "kind": "r",
+          "rls": true,
+          "schema": "public"
+        }
+      },
+      "id": "tasks.db.task.task_labels",
+      "name": "task_labels",
+      "parent": "tasks.db.task",
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 419,
+        "repo": "snapshot"
+      },
+      "type": "table"
+    },
+    {
+      "columns": [
+        {
+          "name": "id",
+          "nullable": false,
+          "pk": true,
+          "type": "uuid"
+        },
+        {
+          "name": "title",
+          "nullable": true,
+          "pk": false,
+          "type": "text"
+        },
+        {
+          "name": "board_id",
+          "nullable": true,
+          "pk": false,
+          "type": "uuid"
+        },
+        {
+          "name": "assignee_id",
+          "nullable": true,
+          "pk": false,
+          "type": "uuid"
+        }
+      ],
+      "facets": {
+        "pg.rls": {
+          "policies": [
+            {
+              "command": "all",
+              "name": "tasks_team_access",
+              "permissive": true,
+              "roles": [
+                "authenticated"
+              ],
+              "using": "auth.uid() IS NOT NULL",
+              "withCheck": "auth.uid() IS NOT NULL"
+            }
+          ]
+        },
+        "pg.table": {
+          "grants": {
+            "authenticated": [
+              "select",
+              "insert",
+              "update",
+              "delete"
+            ]
+          },
+          "kind": "r",
+          "realtime": true,
+          "rls": true,
+          "schema": "public"
+        }
+      },
+      "id": "tasks.db.task.tasks",
+      "name": "tasks",
+      "parent": "tasks.db.task",
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 229,
+        "repo": "snapshot"
+      },
+      "type": "table"
+    },
+    {
+      "columns": [
+        {
+          "name": "id",
+          "nullable": false,
+          "pk": true,
+          "type": "uuid"
+        },
+        {
+          "name": "title",
+          "nullable": true,
+          "pk": false,
+          "type": "text"
+        },
+        {
+          "name": "team_id",
+          "nullable": true,
+          "pk": false,
+          "type": "uuid"
+        },
+        {
+          "name": "profile_id",
+          "nullable": true,
+          "pk": false,
+          "type": "uuid"
+        }
+      ],
+      "facets": {
+        "pg.rls": {
+          "policies": [
+            {
+              "command": "all",
+              "name": "team_members_team_access",
+              "permissive": true,
+              "roles": [
+                "authenticated"
+              ],
+              "using": "auth.uid() IS NOT NULL",
+              "withCheck": "auth.uid() IS NOT NULL"
+            }
+          ]
+        },
+        "pg.table": {
+          "grants": {
+            "authenticated": [
+              "select",
+              "insert",
+              "update",
+              "delete"
+            ]
+          },
+          "kind": "r",
+          "rls": true,
+          "schema": "public"
+        }
+      },
+      "id": "tasks.db.task.team_members",
+      "name": "team_members",
+      "parent": "tasks.db.task",
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 97,
+        "repo": "snapshot"
+      },
+      "type": "table"
+    },
+    {
+      "columns": [
+        {
+          "name": "id",
+          "nullable": false,
+          "pk": true,
+          "type": "uuid"
+        },
+        {
+          "name": "title",
+          "nullable": true,
+          "pk": false,
+          "type": "text"
+        }
+      ],
+      "facets": {
+        "pg.rls": {
+          "policies": [
+            {
+              "command": "all",
+              "name": "teams_team_access",
+              "permissive": true,
+              "roles": [
+                "authenticated"
+              ],
+              "using": "auth.uid() IS NOT NULL",
+              "withCheck": "auth.uid() IS NOT NULL"
+            }
+          ]
+        },
+        "pg.table": {
+          "grants": {
+            "authenticated": [
+              "select",
+              "insert",
+              "update",
+              "delete"
+            ]
+          },
+          "kind": "r",
+          "rls": true,
+          "schema": "public"
+        }
+      },
+      "id": "tasks.db.task.teams",
+      "name": "teams",
+      "parent": "tasks.db.task",
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 15,
+        "repo": "snapshot"
+      },
+      "type": "table"
+    },
+    {
+      "description": "Buckets of Supabase Storage.",
+      "id": "tasks.files",
+      "name": "File storage",
+      "parent": null,
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/config.toml",
+        "line": 6,
+        "repo": "taskcode"
+      },
+      "technology": "S3 (Supabase Storage)",
+      "type": "datastore"
+    },
+    {
+      "facets": {
+        "storage.bucket": {
+          "allowedMimeTypes": [
+            "text/plain",
+            "image/png"
+          ],
+          "fileSizeLimit": 5242880,
+          "public": false
+        }
+      },
+      "id": "tasks.files.attachments",
+      "name": "attachments",
+      "parent": "tasks.files",
+      "provenance": "extracted",
+      "source": {
+        "file": "examples/tasks-supabase/target/demo-schema.json",
+        "line": 702,
+        "repo": "snapshot"
+      },
+      "technology": "bucket",
+      "type": "table"
+    },
+    {
+      "description": "Authentication",
+      "facets": {
+        "supabase.auth": {
+          "providers": []
+        },
+        "supabase.platform": {
+          "docs": "https://github.com/supabase/supabase",
+          "part": "auth",
+          "path": "/auth/v1"
+        }
+      },
+      "id": "tasks.platform.auth",
+      "name": "Authentication",
+      "parent": null,
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/config.toml",
+        "line": 4,
+        "repo": "taskcode"
+      },
+      "technology": "GoTrue",
+      "tier": "service",
+      "type": "app"
+    },
+    {
+      "description": "API gateway",
+      "facets": {
+        "supabase.platform": {
+          "docs": "https://github.com/supabase/supabase",
+          "part": "gateway"
+        }
+      },
+      "id": "tasks.platform.gateway",
+      "name": "API gateway",
+      "parent": null,
+      "provenance": "declared",
+      "source": {
+        "config": "examples/tasks-supabase/config.ts#SUPABASE_SERVICES.gateway"
+      },
+      "technology": "Kong",
+      "tier": "service",
+      "type": "app"
+    },
+    {
+      "description": "GraphQL",
+      "facets": {
+        "supabase.platform": {
+          "docs": "https://github.com/supabase/supabase",
+          "part": "graphql"
+        }
+      },
+      "id": "tasks.platform.graphql",
+      "name": "GraphQL",
+      "parent": null,
+      "provenance": "declared",
+      "source": {
+        "config": "examples/tasks-supabase/config.ts#SUPABASE_SERVICES.graphql"
+      },
+      "technology": "pg_graphql",
+      "tier": "service",
+      "type": "app"
+    },
+    {
+      "description": "Database metadata",
+      "facets": {
+        "supabase.platform": {
+          "docs": "https://github.com/supabase/supabase",
+          "part": "meta"
+        }
+      },
+      "id": "tasks.platform.meta",
+      "name": "Database metadata",
+      "parent": null,
+      "provenance": "declared",
+      "source": {
+        "config": "examples/tasks-supabase/config.ts#SUPABASE_SERVICES.meta"
+      },
+      "technology": "postgres-meta",
+      "tier": "service",
+      "type": "app"
+    },
+    {
+      "description": "Connection pool",
+      "facets": {
+        "supabase.platform": {
+          "docs": "https://github.com/supabase/supabase",
+          "part": "pooler"
+        }
+      },
+      "id": "tasks.platform.pooler",
+      "name": "Connection pool",
+      "parent": null,
+      "provenance": "declared",
+      "source": {
+        "config": "examples/tasks-supabase/config.ts#SUPABASE_SERVICES.pooler"
+      },
+      "technology": "Supavisor",
+      "tier": "service",
+      "type": "app"
+    },
+    {
+      "description": "Live changes",
+      "facets": {
+        "supabase.platform": {
+          "docs": "https://github.com/supabase/supabase",
+          "part": "realtime",
+          "path": "/realtime/v1"
+        }
+      },
+      "id": "tasks.platform.realtime",
+      "name": "Live changes",
+      "parent": null,
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/config.toml",
+        "line": 8,
+        "repo": "taskcode"
+      },
+      "technology": "Realtime",
+      "tier": "service",
+      "type": "app"
+    },
+    {
+      "description": "Data API",
+      "facets": {
+        "supabase.api": {
+          "schemas": [
+            "public"
+          ]
+        },
+        "supabase.platform": {
+          "docs": "https://github.com/supabase/supabase",
+          "part": "rest",
+          "path": "/rest/v1"
+        }
+      },
+      "id": "tasks.platform.rest",
+      "name": "Data API",
+      "parent": null,
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/config.toml",
+        "line": 1,
+        "repo": "taskcode"
+      },
+      "technology": "PostgREST",
+      "tier": "service",
+      "type": "app"
+    },
+    {
+      "description": "File storage",
+      "facets": {
+        "supabase.platform": {
+          "docs": "https://github.com/supabase/supabase",
+          "part": "storage",
+          "path": "/storage/v1"
+        },
+        "supabase.storage": {}
+      },
+      "id": "tasks.platform.storage",
+      "name": "File storage",
+      "parent": null,
+      "provenance": "extracted",
+      "source": {
+        "file": "supabase/config.toml",
+        "line": 6,
+        "repo": "taskcode"
+      },
+      "technology": "Supabase Storage",
+      "tier": "service",
+      "type": "app"
+    },
+    {
+      "description": "Studio",
+      "facets": {
+        "supabase.platform": {
+          "docs": "https://github.com/supabase/supabase",
+          "part": "studio"
+        }
+      },
+      "id": "tasks.platform.studio",
+      "name": "Studio",
+      "parent": null,
+      "provenance": "declared",
+      "source": {
+        "config": "examples/tasks-supabase/config.ts#SUPABASE_SERVICES.studio"
+      },
+      "technology": "Supabase Studio",
+      "tier": "service",
+      "type": "app"
+    }
+  ],
+  "id": "tasks-database",
+  "repos": {
+    "snapshot": {
+      "blob": "{file}#L{line}",
+      "commit": "b9db41922ee0",
+      "url": "examples/tasks-supabase/target/demo-schema.json"
+    },
+    "taskcode": {
+      "blob": "examples/tasks-supabase/target/blob/b9db41922ee0/{file}#L{line}",
+      "commit": "b9db41922ee0",
+      "url": "examples/tasks-supabase/target"
+    }
+  },
+  "schemaVersion": "1.2.0",
+  "tiers": [
+    {
+      "id": "ui",
+      "title": "Interface"
+    },
+    {
+      "id": "service",
+      "title": "Services"
+    },
+    {
+      "id": "data",
+      "title": "Data"
+    }
+  ],
+  "title": "Task database and platform (database from a demo snapshot; services from supabase/config.toml)"
+}

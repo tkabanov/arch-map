@@ -1,0 +1,17 @@
+{
+    // The declarations of @arch-map/viewer (scripts/build-lib.ts): the package's entry points and what they reach,
+    // emitted under packages/viewer/dist/types/ with the repository's layout (viewer/src/…, types/…); build-lib.ts
+    // rewrites the `.ts` specifiers to `.js` and adds the short `index.d.ts`, `element.d.ts`, `react.d.ts` beside them.
+    "extends": "./tsconfig.viewer.json",
+    "compilerOptions": {
+        "noEmit": false,
+        "declaration": true,
+        "emitDeclarationOnly": true,
+        "rootDir": ".",
+        "outDir": "packages/viewer/dist/types",
+        "allowJs": false,
+        "checkJs": false
+    },
+    "include": [],
+    "files": ["viewer/src/index.ts", "viewer/src/element.ts", "viewer/src/react.ts"]
+}

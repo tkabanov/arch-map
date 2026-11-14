@@ -1,0 +1,712 @@
+{
+ "env": "demo",
+ "takenAt": "2026-01-01T00:00:00Z",
+ "schemas": [
+  "public"
+ ],
+ "meta": {
+  "postgres": "17",
+  "role": "catalog_reader",
+  "lastMigration": null,
+  "appliedMigrations": 0,
+  "otherSchemas": []
+ },
+ "tables": [
+  {
+   "schema": "public",
+   "name": "teams",
+   "kind": "r",
+   "comment": null,
+   "rls": true,
+   "forceRls": false,
+   "columns": [
+    {
+     "name": "id",
+     "type": "uuid",
+     "notNull": true
+    },
+    {
+     "name": "title",
+     "type": "text"
+    }
+   ],
+   "pk": [
+    "id"
+   ],
+   "fks": [],
+   "grants": [
+    {
+     "role": "authenticated",
+     "privilege": "SELECT"
+    },
+    {
+     "role": "authenticated",
+     "privilege": "INSERT"
+    },
+    {
+     "role": "authenticated",
+     "privilege": "UPDATE"
+    },
+    {
+     "role": "authenticated",
+     "privilege": "DELETE"
+    }
+   ]
+  },
+  {
+   "schema": "public",
+   "name": "profiles",
+   "kind": "r",
+   "comment": null,
+   "rls": true,
+   "forceRls": false,
+   "columns": [
+    {
+     "name": "id",
+     "type": "uuid",
+     "notNull": true
+    },
+    {
+     "name": "title",
+     "type": "text"
+    }
+   ],
+   "pk": [
+    "id"
+   ],
+   "fks": [],
+   "grants": [
+    {
+     "role": "authenticated",
+     "privilege": "SELECT"
+    },
+    {
+     "role": "authenticated",
+     "privilege": "INSERT"
+    },
+    {
+     "role": "authenticated",
+     "privilege": "UPDATE"
+    },
+    {
+     "role": "authenticated",
+     "privilege": "DELETE"
+    }
+   ]
+  },
+  {
+   "schema": "public",
+   "name": "team_members",
+   "kind": "r",
+   "comment": null,
+   "rls": true,
+   "forceRls": false,
+   "columns": [
+    {
+     "name": "id",
+     "type": "uuid",
+     "notNull": true
+    },
+    {
+     "name": "title",
+     "type": "text"
+    },
+    {
+     "name": "team_id",
+     "type": "uuid"
+    },
+    {
+     "name": "profile_id",
+     "type": "uuid"
+    }
+   ],
+   "pk": [
+    "id"
+   ],
+   "fks": [
+    {
+     "name": "team_members_team_id_fk",
+     "columns": [
+      "team_id"
+     ],
+     "refSchema": "public",
+     "refTable": "teams",
+     "refColumns": [
+      "id"
+     ],
+     "onDelete": "CASCADE"
+    },
+    {
+     "name": "team_members_profile_id_fk",
+     "columns": [
+      "profile_id"
+     ],
+     "refSchema": "public",
+     "refTable": "profiles",
+     "refColumns": [
+      "id"
+     ],
+     "onDelete": "CASCADE"
+    }
+   ],
+   "grants": [
+    {
+     "role": "authenticated",
+     "privilege": "SELECT"
+    },
+    {
+     "role": "authenticated",
+     "privilege": "INSERT"
+    },
+    {
+     "role": "authenticated",
+     "privilege": "UPDATE"
+    },
+    {
+     "role": "authenticated",
+     "privilege": "DELETE"
+    }
+   ]
+  },
+  {
+   "schema": "public",
+   "name": "boards",
+   "kind": "r",
+   "comment": null,
+   "rls": true,
+   "forceRls": false,
+   "columns": [
+    {
+     "name": "id",
+     "type": "uuid",
+     "notNull": true
+    },
+    {
+     "name": "title",
+     "type": "text"
+    },
+    {
+     "name": "team_id",
+     "type": "uuid"
+    }
+   ],
+   "pk": [
+    "id"
+   ],
+   "fks": [
+    {
+     "name": "boards_team_id_fk",
+     "columns": [
+      "team_id"
+     ],
+     "refSchema": "public",
+     "refTable": "teams",
+     "refColumns": [
+      "id"
+     ],
+     "onDelete": "CASCADE"
+    }
+   ],
+   "grants": [
+    {
+     "role": "authenticated",
+     "privilege": "SELECT"
+    },
+    {
+     "role": "authenticated",
+     "privilege": "INSERT"
+    },
+    {
+     "role": "authenticated",
+     "privilege": "UPDATE"
+    },
+    {
+     "role": "authenticated",
+     "privilege": "DELETE"
+    }
+   ]
+  },
+  {
+   "schema": "public",
+   "name": "tasks",
+   "kind": "r",
+   "comment": null,
+   "rls": true,
+   "forceRls": false,
+   "columns": [
+    {
+     "name": "id",
+     "type": "uuid",
+     "notNull": true
+    },
+    {
+     "name": "title",
+     "type": "text"
+    },
+    {
+     "name": "board_id",
+     "type": "uuid"
+    },
+    {
+     "name": "assignee_id",
+     "type": "uuid"
+    }
+   ],
+   "pk": [
+    "id"
+   ],
+   "fks": [
+    {
+     "name": "tasks_board_id_fk",
+     "columns": [
+      "board_id"
+     ],
+     "refSchema": "public",
+     "refTable": "boards",
+     "refColumns": [
+      "id"
+     ],
+     "onDelete": "CASCADE"
+    },
+    {
+     "name": "tasks_assignee_id_fk",
+     "columns": [
+      "assignee_id"
+     ],
+     "refSchema": "public",
+     "refTable": "profiles",
+     "refColumns": [
+      "id"
+     ],
+     "onDelete": "CASCADE"
+    }
+   ],
+   "grants": [
+    {
+     "role": "authenticated",
+     "privilege": "SELECT"
+    },
+    {
+     "role": "authenticated",
+     "privilege": "INSERT"
+    },
+    {
+     "role": "authenticated",
+     "privilege": "UPDATE"
+    },
+    {
+     "role": "authenticated",
+     "privilege": "DELETE"
+    }
+   ]
+  },
+  {
+   "schema": "public",
+   "name": "comments",
+   "kind": "r",
+   "comment": null,
+   "rls": true,
+   "forceRls": false,
+   "columns": [
+    {
+     "name": "id",
+     "type": "uuid",
+     "notNull": true
+    },
+    {
+     "name": "title",
+     "type": "text"
+    },
+    {
+     "name": "task_id",
+     "type": "uuid"
+    }
+   ],
+   "pk": [
+    "id"
+   ],
+   "fks": [
+    {
+     "name": "comments_task_id_fk",
+     "columns": [
+      "task_id"
+     ],
+     "refSchema": "public",
+     "refTable": "tasks",
+     "refColumns": [
+      "id"
+     ],
+     "onDelete": "CASCADE"
+    }
+   ],
+   "grants": [
+    {
+     "role": "authenticated",
+     "privilege": "SELECT"
+    },
+    {
+     "role": "authenticated",
+     "privilege": "INSERT"
+    },
+    {
+     "role": "authenticated",
+     "privilege": "UPDATE"
+    },
+    {
+     "role": "authenticated",
+     "privilege": "DELETE"
+    }
+   ]
+  },
+  {
+   "schema": "public",
+   "name": "labels",
+   "kind": "r",
+   "comment": null,
+   "rls": true,
+   "forceRls": false,
+   "columns": [
+    {
+     "name": "id",
+     "type": "uuid",
+     "notNull": true
+    },
+    {
+     "name": "title",
+     "type": "text"
+    },
+    {
+     "name": "team_id",
+     "type": "uuid"
+    }
+   ],
+   "pk": [
+    "id"
+   ],
+   "fks": [
+    {
+     "name": "labels_team_id_fk",
+     "columns": [
+      "team_id"
+     ],
+     "refSchema": "public",
+     "refTable": "teams",
+     "refColumns": [
+      "id"
+     ],
+     "onDelete": "CASCADE"
+    }
+   ],
+   "grants": [
+    {
+     "role": "authenticated",
+     "privilege": "SELECT"
+    },
+    {
+     "role": "authenticated",
+     "privilege": "INSERT"
+    },
+    {
+     "role": "authenticated",
+     "privilege": "UPDATE"
+    },
+    {
+     "role": "authenticated",
+     "privilege": "DELETE"
+    }
+   ]
+  },
+  {
+   "schema": "public",
+   "name": "task_labels",
+   "kind": "r",
+   "comment": null,
+   "rls": true,
+   "forceRls": false,
+   "columns": [
+    {
+     "name": "id",
+     "type": "uuid",
+     "notNull": true
+    },
+    {
+     "name": "title",
+     "type": "text"
+    },
+    {
+     "name": "task_id",
+     "type": "uuid"
+    },
+    {
+     "name": "label_id",
+     "type": "uuid"
+    }
+   ],
+   "pk": [
+    "id"
+   ],
+   "fks": [
+    {
+     "name": "task_labels_task_id_fk",
+     "columns": [
+      "task_id"
+     ],
+     "refSchema": "public",
+     "refTable": "tasks",
+     "refColumns": [
+      "id"
+     ],
+     "onDelete": "CASCADE"
+    },
+    {
+     "name": "task_labels_label_id_fk",
+     "columns": [
+      "label_id"
+     ],
+     "refSchema": "public",
+     "refTable": "labels",
+     "refColumns": [
+      "id"
+     ],
+     "onDelete": "CASCADE"
+    }
+   ],
+   "grants": [
+    {
+     "role": "authenticated",
+     "privilege": "SELECT"
+    },
+    {
+     "role": "authenticated",
+     "privilege": "INSERT"
+    },
+    {
+     "role": "authenticated",
+     "privilege": "UPDATE"
+    },
+    {
+     "role": "authenticated",
+     "privilege": "DELETE"
+    }
+   ]
+  }
+ ],
+ "views": [],
+ "functions": [
+  {
+   "schema": "public",
+   "name": "task_count",
+   "args": "",
+   "returns": "bigint",
+   "kind": "f",
+   "language": "sql",
+   "securityDefiner": false,
+   "volatility": "v",
+   "comment": null,
+   "executableBy": [
+    "authenticated"
+   ],
+   "body": "SELECT count(*) FROM public.tasks;"
+  },
+  {
+   "schema": "public",
+   "name": "complete_task",
+   "args": "task_id uuid",
+   "returns": "void",
+   "kind": "f",
+   "language": "sql",
+   "securityDefiner": false,
+   "volatility": "v",
+   "comment": null,
+   "executableBy": [
+    "authenticated"
+   ],
+   "body": "UPDATE public.tasks SET title = 'Complete' WHERE id = task_id;"
+  },
+  {
+   "schema": "public",
+   "name": "archive_comments",
+   "args": "",
+   "returns": "void",
+   "kind": "f",
+   "language": "sql",
+   "securityDefiner": false,
+   "volatility": "v",
+   "comment": null,
+   "executableBy": [
+    "authenticated"
+   ],
+   "body": "DELETE FROM public.comments WHERE title IS NULL;"
+  },
+  {
+   "schema": "public",
+   "name": "record_task_change",
+   "args": "",
+   "returns": "trigger",
+   "kind": "f",
+   "language": "plpgsql",
+   "securityDefiner": false,
+   "volatility": "v",
+   "comment": null,
+   "executableBy": [],
+   "body": "BEGIN INSERT INTO public.comments (id, task_id, title) VALUES (gen_random_uuid(), NEW.id, 'Changed'); RETURN NEW; END;"
+  }
+ ],
+ "triggers": [
+  {
+   "schema": "public",
+   "table": "tasks",
+   "name": "task_changed",
+   "functionSchema": "public",
+   "function": "record_task_change",
+   "enabled": true,
+   "definition": "CREATE TRIGGER task_changed AFTER UPDATE ON public.tasks FOR EACH ROW EXECUTE FUNCTION public.record_task_change();"
+  }
+ ],
+ "policies": [
+  {
+   "schema": "public",
+   "table": "teams",
+   "name": "teams_team_access",
+   "permissive": true,
+   "roles": [
+    "authenticated"
+   ],
+   "command": "all",
+   "using": "auth.uid() IS NOT NULL",
+   "withCheck": "auth.uid() IS NOT NULL"
+  },
+  {
+   "schema": "public",
+   "table": "profiles",
+   "name": "profiles_team_access",
+   "permissive": true,
+   "roles": [
+    "authenticated"
+   ],
+   "command": "all",
+   "using": "auth.uid() IS NOT NULL",
+   "withCheck": "auth.uid() IS NOT NULL"
+  },
+  {
+   "schema": "public",
+   "table": "team_members",
+   "name": "team_members_team_access",
+   "permissive": true,
+   "roles": [
+    "authenticated"
+   ],
+   "command": "all",
+   "using": "auth.uid() IS NOT NULL",
+   "withCheck": "auth.uid() IS NOT NULL"
+  },
+  {
+   "schema": "public",
+   "table": "boards",
+   "name": "boards_team_access",
+   "permissive": true,
+   "roles": [
+    "authenticated"
+   ],
+   "command": "all",
+   "using": "auth.uid() IS NOT NULL",
+   "withCheck": "auth.uid() IS NOT NULL"
+  },
+  {
+   "schema": "public",
+   "table": "tasks",
+   "name": "tasks_team_access",
+   "permissive": true,
+   "roles": [
+    "authenticated"
+   ],
+   "command": "all",
+   "using": "auth.uid() IS NOT NULL",
+   "withCheck": "auth.uid() IS NOT NULL"
+  },
+  {
+   "schema": "public",
+   "table": "comments",
+   "name": "comments_team_access",
+   "permissive": true,
+   "roles": [
+    "authenticated"
+   ],
+   "command": "all",
+   "using": "auth.uid() IS NOT NULL",
+   "withCheck": "auth.uid() IS NOT NULL"
+  },
+  {
+   "schema": "public",
+   "table": "labels",
+   "name": "labels_team_access",
+   "permissive": true,
+   "roles": [
+    "authenticated"
+   ],
+   "command": "all",
+   "using": "auth.uid() IS NOT NULL",
+   "withCheck": "auth.uid() IS NOT NULL"
+  },
+  {
+   "schema": "public",
+   "table": "task_labels",
+   "name": "task_labels_team_access",
+   "permissive": true,
+   "roles": [
+    "authenticated"
+   ],
+   "command": "all",
+   "using": "auth.uid() IS NOT NULL",
+   "withCheck": "auth.uid() IS NOT NULL"
+  },
+  {
+   "schema": "storage",
+   "table": "objects",
+   "name": "attachment_access",
+   "permissive": true,
+   "roles": [
+    "authenticated"
+   ],
+   "command": "all",
+   "using": "bucket_id = 'attachments'",
+   "withCheck": "bucket_id = 'attachments'"
+  }
+ ],
+ "enums": [
+  {
+   "schema": "public",
+   "name": "task_status",
+   "labels": [
+    "todo",
+    "active",
+    "done"
+   ]
+  }
+ ],
+ "cron": [
+  {
+   "name": "archive-empty-comments",
+   "schedule": "0 3 * * *",
+   "active": true,
+   "command": "SELECT public.archive_comments();"
+  }
+ ],
+ "realtime": [
+  {
+   "schema": "public",
+   "table": "tasks"
+  }
+ ],
+ "buckets": [
+  {
+   "id": "attachments",
+   "public": false,
+   "fileSizeLimit": 5242880,
+   "allowedMimeTypes": [
+    "text/plain",
+    "image/png"
+   ]
+  }
+ ]
+}

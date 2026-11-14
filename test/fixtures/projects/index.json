@@ -1,0 +1,4 @@
+{
+  "default": "fxa",
+  "order": ["fxa", "fxb"]
+}

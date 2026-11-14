@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "five-tiers",
+  "title": "Fixture contracts: the five-tier shop",
+  "$defs": {
+    "Order": { "type": "object", "required": ["items"], "properties": { "items": { "type": "array" }, "total": { "type": "number" } } },
+    "OrderPlaced": { "type": "object", "required": ["orderId"], "properties": { "orderId": { "type": "string" } } }
+  }
+}
