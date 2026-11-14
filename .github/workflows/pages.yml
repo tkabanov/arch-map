@@ -1,6 +1,6 @@
 name: pages
 
-# The demo: the viewer built on the example projects (examples/), published to GitHub Pages.
+# The demo site: a landing page (site/) with the viewer on the example projects (examples/) below it, on GitHub Pages.
 on:
   push:
     branches: [main]
@@ -26,11 +26,12 @@ jobs:
           node-version: 22.18
           cache: npm
       - run: npm ci
-      # Relative base: the site lives under /<repo>/, and the viewer fetches specs/ relative to the page.
-      - run: npm run viewer:build -- --base ./
+      # _site/: the landing page (site/) and the viewer under demo/, built with a relative base (the site lives
+      # under /<repo>/, and the viewer fetches specs/ relative to its page)
+      - run: npm run pages:build
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: viewer/dist
+          path: _site
 
   deploy:
     needs: build

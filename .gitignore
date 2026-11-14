@@ -12,3 +12,5 @@ viewer/public/licenses/
 packages/viewer/schema/
 packages/viewer/LICENSE
 *.tgz
+# the GitHub Pages site (npm run pages:build)
+_site/

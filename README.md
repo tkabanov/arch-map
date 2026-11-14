@@ -5,6 +5,8 @@ components, endpoints, tables and contracts. The map is drawn from **specs** —
 the same specs. Generators for NestJS backends and Supabase projects (Postgres, Edge Functions, React clients) ship
 with it, and a new stack is a module that writes the same spec format.
 
+**Live demo:** https://tkabanov.github.io/arch-map/
+
 ![The map of the tasks-supabase example with its scenario open](docs/images/map.png)
 
 arch-map is a core plus **stack adapters**. The core (viewer, spec format, checks) knows no particular system; a

@@ -1,5 +1,6 @@
 {
   "name": "arch-map",
+  "version": "0.0.1",
   "private": true,
   "type": "module",
   "exports": {
@@ -34,6 +35,7 @@
     "viewer:build": "node --env-file-if-exists=.env.local scripts/publish-specs.ts && vite build viewer --outDir dist --emptyOutDir",
     "check:boundary": "node --env-file-if-exists=.env.local scripts/check-boundary.ts",
     "viewer:preview": "vite preview viewer --outDir dist --port 4848 --strictPort",
+    "pages:build": "npm run viewer:build -- --base ./ && rm -rf _site && cp -R site _site && cp -R viewer/dist _site/demo",
     "lib:build": "node scripts/build-lib.ts",
     "lib:pack": "node scripts/build-lib.ts --pack",
     "types": "node scripts/gen-types.ts",
