@@ -5,7 +5,7 @@ name: release
 # The package @arch-map/viewer has releases of its own (viewer-v*, publish-viewer.yml).
 on:
   push:
-    tags: ['v*']
+    tags: ['v[0-9]*']   # v1.2.3, not viewer-v* (publish-viewer.yml)
 
 permissions:
   contents: write
