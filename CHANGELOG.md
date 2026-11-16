@@ -1,5 +1,16 @@
 # Changelog
 
+## @arch-map/viewer 1.1.0 — 2026-11-16
+
+Spec schema 1.4 (documents of 1.0–1.3 load unchanged):
+
+- `glyphs[].tone` (`ok`, `warn`, `bad`, `muted`): a facet colors its tiles and their labels.
+- Element `order` and `row`: siblings stand in the declared order on their parent's board, and a change of `row`
+  starts a new row.
+- `edgeStyles` (`facet`, `dash`: solid / dashed / dotted, `role`, `planned`): relations carrying a facet are drawn
+  dashed or dotted, each style is a filter in the legend; planned relations (not in the code yet) are fainter and
+  listed under Planned.
+
 ## @arch-map/viewer 1.0.2 — 2026-11-16
 
 - Trackpad pinch zooms the map in Safari: WebKit's gesture events become the same pinch as Chrome's ctrlKey wheel
