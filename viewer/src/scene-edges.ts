@@ -1,6 +1,6 @@
 // The relations: lines with their names, the envelope chips on them, the pulses along what is lit.
 import * as THREE from 'three';
-import { KINDS } from './model.ts';
+import { KINDS, lineStyle } from './model.ts';
 import { hasPolicies, shownFields, SIDE_TITLE } from './envelopes.ts';
 import { Line2 } from 'three/examples/jsm/lines/Line2.js';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry.js';
@@ -37,6 +37,13 @@ function edgeCurve(a: PlacedNode, b: PlacedNode, k: number): THREE.CubicBezierCu
     const lift = 2.5 + dist * 0.22 + k * 2.2;
     return new THREE.CubicBezierCurve3(ca, ca.clone().add(new THREE.Vector3(0, lift, 0)), cb.clone().add(new THREE.Vector3(0, lift, 0)), cb);
 }
+
+/** Dash of a line in world units (spec 1.4 `edgeStyles[].dash`). */
+const DASH: Record<string, { dashed?: boolean; dashSize?: number; gapSize?: number }> = {
+    solid: {},
+    dashed: { dashed: true, dashSize: 1.6, gapSize: 1.1 },
+    dotted: { dashed: true, dashSize: 0.35, gapSize: 0.75 },
+};
 
 /** REST counts endpoints, the rest count relations. */
 export function edgeCount(e: Pick<FoldedEdge, 'group' | 'raw'>): number {
@@ -100,9 +107,11 @@ export function buildEdges(scene: MapScene, folded: RoutedEdge[], _model?: Model
             if (bg) { const m = bg.clone().lerp(c, 0.35 + 0.65 * (i / (pts.length - 1))); return [m.r, m.g, m.b]; }
             return [c.r * k, c.g * k, c.b * k];
         }));
-        const mat = new LineMaterial({ vertexColors: true, linewidth: width, transparent: true, opacity: 0.5, depthWrite: false, toneMapped: false });
+        const { dash, planned } = lineStyle(e);
+        const mat = new LineMaterial({ vertexColors: true, linewidth: width, transparent: true, opacity: 0.5, depthWrite: false, toneMapped: false, ...DASH[dash] });
         mat.resolution.copy(scene.lineRes);
         const tube = new Line2(geo, mat);
+        if (dash !== 'solid') tube.computeLineDistances();
         tube.userData = { type: 'edge', id: e.id, width };
         const hit = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, colorWrite: false }));
         hit.userData = { type: 'edge', id: e.id };
@@ -122,7 +131,8 @@ export function buildEdges(scene: MapScene, folded: RoutedEdge[], _model?: Model
         const label = new CSS2DObject(el) as Label;
         label.position.copy(curve.getPointAt(0.5));
         scene.group.add(label);
-        scene.edges.set(e.id, { edge: e, tube, hit, label, curve, mat, width, lock, pts: curve.getPoints(24), fresh: !had.has(e.id) });
+        if (planned) el.classList.add('planned');
+        scene.edges.set(e.id, { edge: e, tube, hit, label, curve, mat, width, lock, planned, pts: curve.getPoints(24), fresh: !had.has(e.id) });
     }
     scene.applyView();
     scene.edgeFade = performance.now();

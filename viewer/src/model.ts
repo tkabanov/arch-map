@@ -26,6 +26,10 @@ export const KINDS: Kinds = {
 export const kindsFor = (mode: ThemeMode): Kinds => Object.fromEntries(Object.entries(KINDS).map(([k, v]) => [k, { ...v, color: ink(v.color, mode) }]));
 export const kindGroup = (kind: string): string => GROUP_OF[kind as Channel] ?? 'call';
 
+/** Siblings on a board: outside the slice last; then by `order` (spec 1.4; those without one follow), then by name. */
+export const siblingOrder = (a: ViewNode, b: ViewNode): number =>
+    Number(!!a.context) - Number(!!b.context) || (a.order ?? Infinity) - (b.order ?? Infinity) || a.title.localeCompare(b.title);
+
 /** Endpoints on a block and all its descendants. */
 export const countEndpoints = (n: ViewNode): number => (n.endpoints?.length ?? 0) + n.children.reduce((a, c) => a + countEndpoints(c), 0);
 
@@ -50,7 +54,7 @@ export function buildModel(raw: RawModel): Model {
     // `has(null)` is false: a root is never a context parent
     for (const n of nodes.values()) if (n.context && n.type !== 'group' && ctxParents.has(n.parent as ElementId)) n.parent = `${n.parent}.__context`;
     for (const n of nodes.values()) if (n.parent) nodes.get(n.parent)?.children.push(n);
-    for (const n of nodes.values()) n.children.sort((a, b) => Number(!!a.context) - Number(!!b.context) || a.title.localeCompare(b.title));
+    for (const n of nodes.values()) n.children.sort(siblingOrder);
     const roots = [...nodes.values()].filter((n) => !n.parent);
 
     const edges = raw.edges;
@@ -122,6 +126,7 @@ export function foldEdges(model: Model, expanded: Set<ElementId>, filters: Recor
     const map = new Map<string, FoldedEdge>();
     for (const e of model.edges) {
         if (!filters[e.group]) continue;
+        if (e.style && filters[`style:${e.style}`] === false) continue; // a declared edge style the legend turned off (1.4)
         const a = visibleAncestor(model, expanded, e.from);
         const b = visibleAncestor(model, expanded, e.to);
         if (!a || !b || a === b) continue;
@@ -132,6 +137,12 @@ export function foldEdges(model: Model, expanded: Set<ElementId>, filters: Recor
         map.get(key)!.raw.push(e);
     }
     return [...map.values()];
+}
+
+/** A line's dash and whether it is planned: what all the relations folded into it share (mixed: solid, not planned). */
+export function lineStyle(e: Pick<FoldedEdge, 'raw'>): { dash: string; planned: boolean } {
+    const dashes = new Set(e.raw.map((r) => r.dash ?? 'solid'));
+    return { dash: dashes.size === 1 ? [...dashes][0] : 'solid', planned: e.raw.length > 0 && e.raw.every((r) => r.planned) };
 }
 
 /**

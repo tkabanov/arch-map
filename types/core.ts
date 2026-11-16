@@ -14,6 +14,7 @@ import type {
     Method,
     MethodName,
     Glyph,
+    EdgeStyle,
     Scenario,
     Step,
     Tier,
@@ -46,6 +47,8 @@ export interface MergedSet {
     tiers: Tier[];
     /** Every document's `glyphs` in load order, one per facet: the first declaration of a facet wins (AD-13). */
     glyphs: Glyph[];
+    /** Every document's `edgeStyles` in load order, one per facet: the first declaration wins (spec 1.4). */
+    edgeStyles: EdgeStyle[];
     byId: Map<ElementId, Element>;
     edgeById: Map<EdgeId, Edge>;
     docOf: Map<ElementId, string>;

@@ -24,7 +24,7 @@ A project is checked as a set of its own: ids are unique and `requires` resolve 
 envelope keys `contracts/…#/…`) are relative to the document, so to the project's `specs/contracts/`. Document names
 are unique across projects; an element id in two projects is a warning.
 
-Every document: `{ schemaVersion, id, title, requires?, repos?, tiers?, glyphs?, elements[], edges[], scenarios?, envelopes?, overrides? }`.
+Every document: `{ schemaVersion, id, title, requires?, repos?, tiers?, glyphs?, edgeStyles?, elements[], edges[], scenarios?, envelopes?, overrides? }`.
 A hand overlay's systems claim apps and datastores (`contains`): after merging, `shop.api`'s parent is
 `overlay.sys.backend`; in the file itself every app/datastore has `parent: null`.
 
@@ -46,6 +46,7 @@ A hand overlay's systems claim apps and datastores (`contains`): after merging, 
 | `columns` | tables: `[{ name, type, nullable, pk }]` |
 | `contains` | systems: claimed app/datastore ids |
 | `facets` | optional stack detail, keyed `stack.kind` (`nest.service`, `pg.rls`, …). Never needed to answer a core question |
+| `order`, `row` | since 1.4, display only: place among siblings on the parent's board (ascending; siblings without one follow, by name), and the board's row (a change of `row` starts a new row; with any `row` among siblings, rows no longer wrap by width) |
 
 Endpoints (REST routes, RPCs, webhook targets) are children of the component that serves them. Endpoint id =
 `<component id>.<http method>_<path as snake>`.
@@ -77,6 +78,24 @@ How the map draws an element that carries a facet: the stack that emits the face
 document's in load order; an element with several declared facets takes the first. A facet declared in two documents
 must be declared the same way. Without a declaration an element is drawn by its core type. Display only: no core
 question depends on it.
+
+Since 1.4 a glyph may carry a `tone` — `ok` (green), `warn` (amber), `bad` (red), `muted` (grey, label dimmed) — that
+colors the tile and its label instead of the glyph's color (each theme deepens it as it does its own colors):
+`{ "facet": "acme.broken", "shape": "grid", "role": "broken tool", "tone": "bad" }`.
+
+## Edge styles (since 1.4)
+
+How the map draws a relation that carries a facet, like glyphs for elements:
+
+```json
+"edgeStyles": [{ "facet": "acme.on-request", "dash": "dashed", "role": "Fetched on request" },
+               { "facet": "acme.next", "dash": "dotted", "role": "Next step", "planned": true }]
+```
+
+`dash` is `solid`, `dashed` or `dotted`; `role` names the legend's entry, which shows or hides those relations.
+`planned: true` marks relations not in the code yet: drawn fainter, with an italic label, listed under Planned in the
+legend. The same merge rules as glyphs (first declaration wins; a facet is declared the same way everywhere). Relations
+of one channel between the same two blocks fold into one line: it is dashed or planned only if all of them are.
 
 ## Rails: buses, queues, jobs (since 1.1)
 

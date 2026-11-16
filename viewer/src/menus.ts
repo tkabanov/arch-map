@@ -28,7 +28,7 @@ export function setupMenus(app: App): void {
     app.$('#legend').addEventListener('click', (e) => {
         const b = (e.target as Element).closest<HTMLElement>('[data-kind]');
         if (!b) return;
-        state.filters[b.dataset.kind!] = !state.filters[b.dataset.kind!];
+        state.filters[b.dataset.kind!] = !(state.filters[b.dataset.kind!] ?? true); // an edge style's filter (1.4) is on until turned off
         b.setAttribute('aria-pressed', String(state.filters[b.dataset.kind!]));
         app.relayout();
     }, on);

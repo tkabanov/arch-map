@@ -65,6 +65,8 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 .nlabel.plate { font-size: 13px; letter-spacing: .01em; color: #cfd8e5; }
 .nlabel.plate b { font-weight: 600; }
 .nlabel.ctx { opacity: .65; }
+.nlabel.tone b { color: var(--tone); }
+.nlabel.tone-muted { opacity: .7; }
 .nlabel.dim { opacity: .18; }
 .nlabel.unlit { opacity: .6; }
 .nlabel.sel b { color: #fff; background: var(--accent); color: #0b1020; border-radius: 4px; padding: 0 4px; text-shadow: none; }
@@ -72,6 +74,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 .elabel { font: 600 10.5px var(--font-code); color: var(--c); background: rgb(16 20 26 / .86); border: 1px solid var(--c); border-radius: 999px; padding: 1px 7px; white-space: nowrap; pointer-events: auto; cursor: pointer; }
 .elabel span { color: #cfd8e5; font-weight: 500; }
 .elabel.dim { opacity: .12; }
+.elabel.planned { border-style: dashed; font-style: italic; }
 .elabel.sel { background: var(--c); color: #0b1020; }
 .elabel.sel span { color: #0b1020; }
 
@@ -211,6 +214,10 @@ details.ref[open] { display: block; border-left: 2px solid var(--line); padding-
 .lg-kinds button[aria-pressed="false"] { opacity: .7; color: var(--muted); }
 .lg-kinds button small { display: block; font-size: var(--fs-1); color: var(--muted); }
 .lg-kinds button i { flex: none; }
+.lg-kinds .lg-dash i { height: 0; border-radius: 0; background: none; border-top: 2px solid var(--muted); }
+.lg-kinds .lg-dash.d-dashed i { border-top-style: dashed; }
+.lg-kinds .lg-dash.d-dotted i { border-top-style: dotted; border-top-width: 3px; }
+.lg-kinds .lg-dash.planned span { font-style: italic; }
 .lg-ramp { display: flex; align-items: center; gap: 6px; font-size: var(--fs-1); color: var(--muted); margin-top: 4px; }
 .lg-ramp i { flex: 1; height: 8px; border-radius: 4px; background: linear-gradient(90deg, #25324a, #2f5f9e, #3f8fb0, #d9a03b, #e5534b); }
 /* shape icons, drawn with CSS so they need no images */

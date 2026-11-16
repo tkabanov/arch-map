@@ -2,7 +2,7 @@
 // model tree model.ts makes of it (with the layout's placement written onto its nodes), folded relations, scenarios
 // with view ids and envelopes. Spec document shapes come from types/spec.d.ts, the core's results from types/core.ts.
 // Types only: nothing in this file runs. The scene's own state (three.js objects per node) is local to the scene (viewer/src/scene-types.ts).
-import type { Access, Column, Contract, Element, ElementId, ElementType, EdgeId, Facets, MethodName, Provenance, Source, Channel, Tier, TierId, Repo } from './spec.d.ts';
+import type { Access, Column, Contract, EdgeStyle, Element, ElementId, ElementType, EdgeId, Facets, Glyph, MethodName, Provenance, Source, Channel, Tier, TierId, Repo } from './spec.d.ts';
 import type { MergedSet, PathStep } from './core.ts';
 
 /** spec-adapter.ts: an endpoint folded into its component. */
@@ -31,6 +31,11 @@ export interface AdaptedNode {
     type: ElementType;
     shape: string;
     role: string;
+    /** Spec 1.4: the declared glyph's tone (the tile and label color instead of the glyph's). */
+    tone?: Glyph['tone'];
+    /** Spec 1.4: place among siblings, and the row of the parent's board. */
+    order?: number;
+    row?: number;
     layer: TierId;
     title: string;
     description?: string;
@@ -68,6 +73,10 @@ export interface ViewEdge {
     via: ElementId[];
     endpoint?: ElementId;
     facets?: Facets;
+    /** Spec 1.4: the facet of its declared edge style (a legend filter `style:<facet>`), the dash, planned. */
+    style?: string;
+    dash?: EdgeStyle['dash'];
+    planned?: true;
 }
 
 /** spec-adapter.ts `adaptSpecs` → `meta`. */

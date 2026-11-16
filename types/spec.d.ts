@@ -68,7 +68,7 @@ export type Step =
 export interface ArchMapSpecDocument {
     $schema?: string;
     /**
-     * Semver of this schema; the viewer accepts major 1 only. 1.1 adds `tiers` and the element type `bus`; 1.2 adds the edge's `via`; 1.3 adds `glyphs`.
+     * Semver of this schema; the viewer accepts major 1 only. 1.1 adds `tiers` and the element type `bus`; 1.2 adds the edge's `via`; 1.3 adds `glyphs`; 1.4 adds the glyph's `tone`, the element's `order` and `row`, and `edgeStyles`.
      */
     schemaVersion: string;
     id: string;
@@ -87,6 +87,10 @@ export interface ArchMapSpecDocument {
      * Since 1.3. How the map draws elements that carry a facet: the stack that emits a facet declares its glyph and role here, so the viewer names no facet (AD-13). Ordered: an element with several declared facets takes the first declaration of the merged set (documents in load order). A facet declared in two documents must be declared the same way. Elements without a declared facet fall back to their core type.
      */
     glyphs?: Glyph[];
+    /**
+     * Since 1.4. How the map draws relations that carry a facet, like `glyphs` for elements: the line's dash and a legend entry that shows or hides them. Ordered: a relation with several declared facets takes the first declaration of the merged set. A facet declared in two documents must be declared the same way.
+     */
+    edgeStyles?: EdgeStyle[];
     elements: Element[];
     edges: Edge[];
     scenarios?: Scenario[];
@@ -126,6 +130,28 @@ export interface Glyph {
      * What the element is, in a few words (shown on the card and the panel).
      */
     role: string;
+    /**
+     * Since 1.4. The color of the tile and its label, instead of the glyph's own: ok (green), warn (amber), bad (red), muted (grey, dimmed). The viewer maps each to its theme.
+     */
+    tone?: 'ok' | 'warn' | 'bad' | 'muted';
+}
+export interface EdgeStyle {
+    /**
+     * A facet key, as in an edge's `facets`.
+     */
+    facet: string;
+    /**
+     * How the line is drawn.
+     */
+    dash: 'solid' | 'dashed' | 'dotted';
+    /**
+     * What these relations are, in a few words (the legend's entry).
+     */
+    role: string;
+    /**
+     * Relations not in the code yet: drawn faint, listed under Planned in the legend.
+     */
+    planned?: boolean;
 }
 export interface Element {
     id: ElementId;
@@ -146,6 +172,14 @@ export interface Element {
         value: string;
     };
     confidence?: 'high' | 'medium' | 'low';
+    /**
+     * Since 1.4. Where the element stands among its siblings on its parent's board: ascending; siblings without one follow, by name.
+     */
+    order?: number;
+    /**
+     * Since 1.4. The row of its parent's board the element starts or stays on: a sibling with a different `row` than the one before it (in `order`) starts a new row. Without it, siblings are packed into rows by width.
+     */
+    row?: number;
     methods?: Method[];
     handler?: MethodName;
     http?: {

@@ -30,9 +30,11 @@ export interface VisualKit {
     /** a soft round sprite, made once per map (`dotTexture`) and disposed with it */
     dot: THREE.CanvasTexture;
 }
-/** Color of a node: by glyph; a matrix (something with parts) by core type, a folder grouping lighter. */
-export const colorOf = (n: Pick<ViewNode, 'shape' | 'type' | 'derivedFrom'>, theme: Theme): string => ink(
-    n.shape === 'matrix' ? (n.type === 'module' && n.derivedFrom?.rule === 'folder' ? '#9fb0c8' : MATRIX_COLOR[n.type] ?? '#9fb0c8') : SHAPE_COLOR[n.shape] ?? '#9fb0c8', theme.mode);
+/** Spec 1.4: a declared glyph's tone, instead of the glyph's color (the dark look's; `ink` deepens it on light). */
+const TONE_COLOR: Record<string, string> = { ok: '#34d399', warn: '#fbbf24', bad: '#fb7185', muted: '#6b7280' };
+/** Color of a node: its declared tone; else by glyph; a matrix (something with parts) by core type, a folder grouping lighter. */
+export const colorOf = (n: Pick<ViewNode, 'shape' | 'type' | 'derivedFrom' | 'tone'>, theme: Theme): string => ink(
+    n.tone ? TONE_COLOR[n.tone] : n.shape === 'matrix' ? (n.type === 'module' && n.derivedFrom?.rule === 'folder' ? '#9fb0c8' : MATRIX_COLOR[n.type] ?? '#9fb0c8') : SHAPE_COLOR[n.shape] ?? '#9fb0c8', theme.mode);
 const METHOD: Record<string, string> = { GET: '#34d399', POST: '#7cc4ff', PUT: '#fbbf77', PATCH: '#fbbf77', DELETE: '#fb7185' };
 
 const glass = (theme: Theme, color: THREE.ColorRepresentation, opacity: number) =>

@@ -1,6 +1,6 @@
 // A change of layout: the tween of every block, the fades of what leaves or comes in, the views of nodes and layer fields.
 import * as THREE from 'three';
-import { buildVisual, disposeVisual } from './shapes.ts';
+import { buildVisual, colorOf, disposeVisual } from './shapes.ts';
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 import { sceneColors } from './theme.ts';
 import { ease, smooth, MOVE_MS, ENTER_MS, EDGE_OUT_MS, OPACITY_RATE, esc } from './scene-util.ts';
@@ -433,7 +433,8 @@ export function updateNode(scene: MapScene, v: NodeView, n: PlacedNode, morph = 
     v.node = n;
     const sub = subtitle(n);
     const root = !n.parent && n.type !== 'app' && n.type !== 'datastore'; // the client layer: larger names
-    v.label.element.className = `nlabel ${n._plate ? 'plate' : 'block'} t-${n.type} s-${n.shape}${n.context ? ' ctx' : ''}${root ? ' root' : ''}`;
+    v.label.element.className = `nlabel ${n._plate ? 'plate' : 'block'} t-${n.type} s-${n.shape}${n.context ? ' ctx' : ''}${root ? ' root' : ''}${n.tone ? ` tone tone-${n.tone}` : ''}`;
+    if (n.tone) v.label.element.style.setProperty('--tone', colorOf(n, scene.theme));
     v.label.element._m = null;
     v.label.element.innerHTML = `<b>${esc(n.title)}</b>${n.children.length && !root ? `<i>${n._plate ? '−' : '+' + n.leafCount}</i>` : ''}${sub && !n._plate ? `<span>${esc(sub)}</span>` : ''}`;
 }

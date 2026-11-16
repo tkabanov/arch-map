@@ -64,6 +64,8 @@ export interface EdgeView {
     mat: LineMaterial;
     width: number;
     lock: boolean;
+    /** spec 1.4: every relation on the line is planned (not in the code yet): drawn fainter */
+    planned?: boolean;
     pts: THREE.Vector3[];
     fresh: boolean;
     op?: number;

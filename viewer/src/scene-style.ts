@@ -80,12 +80,15 @@ function tintNode(scene: MapScene, vw: SceneView, id: ElementId, v: NodeView): v
     v.emissive.color.copy(t === undefined ? v.baseColor : ramp(scene, t));
 }
 
+/** A planned relation (spec 1.4) is fainter, unless it is lit. */
+const plannedDim = (v: EdgeView, lit: boolean): number => (v.planned && !lit ? 0.6 : 1);
+
 /** A relation: drawn or not, how strongly (lit, on the way from the last step, at rest), how wide, its step number. */
 function styleEdge(scene: MapScene, vw: SceneView, id: string, v: EdgeView, density: number): void {
     const shown = !vw.edges || vw.edges.has(id);
     const lit = !!vw.litEdges && vw.litEdges.has(id);
     const via = !lit && !!vw.bridge?.has(id); // the way from the last scenario step: drawn, quieter than the step
-    const op = !shown ? 0 : via ? 0.72 : vw.litEdges ? (lit ? 0.9 : vw.soft ? 0.1 : 0.05) : (vw.focus ? 0.6 : 0.32) * density;
+    const op = (!shown ? 0 : via ? 0.72 : vw.litEdges ? (lit ? 0.9 : vw.soft ? 0.1 : 0.05) : (vw.focus ? 0.6 : 0.32) * density) * plannedDim(v, lit);
     v.tube.visible = shown;
     v.op = op; // the fade-in after a rebuild scales this
     v.mat.opacity = op;

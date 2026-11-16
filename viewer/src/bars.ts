@@ -4,7 +4,7 @@ import { stepbarHtml } from './scenario.ts';
 import { announce } from './a11y.ts';
 import { statusFigures, unresolvedCalls, figuresHtml } from './figures.ts';
 import { esc } from './scene-util.ts';
-import type { ElementId } from '../../types/spec.d.ts';
+import type { EdgeStyle, ElementId } from '../../types/spec.d.ts';
 import type { ViewNode } from '../../types/viewer.ts';
 import type { SceneStats } from '../../types/scene.ts';
 import { keepFocus, later, cancel } from './dom.ts';
@@ -102,6 +102,18 @@ export function renderStepbar(app: App): void {
 /** Why a relation kind is not drawn: the three off by default say so in words, a kind the viewer turned off says "hidden". */
 const kindNote = (kind: string, on: boolean): string => (on ? '' : ` <small>${KINDS[kind].on ? 'hidden' : 'off by default'}</small>`);
 
+/** The declared edge styles (spec 1.4) of the map, as filters: today's relations, then the planned ones. */
+function edgeStylesHtml(app: App): string {
+    const styles = app.model.merged.edgeStyles ?? [];
+    const row = (st: EdgeStyle) => {
+        const on = app.state.filters[`style:${st.facet}`] !== false;
+        return `<li><button data-kind="style:${esc(st.facet)}" aria-pressed="${on}" class="lg-dash d-${st.dash}${st.planned ? ' planned' : ''}"><i></i><span>${esc(st.role)}${on ? '' : ' <small>hidden</small>'}</span></button></li>`;
+    };
+    const today = styles.filter((st) => !st.planned), planned = styles.filter((st) => st.planned);
+    return (today.length ? `<div class="lg-h">Relation styles</div><ul class="lg-kinds">${today.map(row).join('')}</ul>` : '') +
+        (planned.length ? `<div class="lg-h">Planned <span class="muted">· not in the code yet</span></div><ul class="lg-kinds">${planned.map(row).join('')}</ul>` : '');
+}
+
 // legend: shapes, and the protocols that double as filters
 export function renderLegend(app: App): void {
     const { state } = app;
@@ -116,6 +128,7 @@ export function renderLegend(app: App): void {
       <ul class="lg-shapes">${shapes.map(([k, t]) => `<li><i class="ico ico-${k}"></i>${t}</li>`).join('')}</ul>
       <div class="lg-h">Relations <span class="muted">· click to show or hide</span></div>
       <ul class="lg-kinds">${Object.entries(app.kinds).map(([k, v]) => `<li><button data-kind="${k}" aria-pressed="${state.filters[k]}" data-style="--c:${v.color}"><i></i><span>${esc(v.title)}${kindNote(k, state.filters[k])}</span></button></li>`).join('')}</ul>
+      ${edgeStylesHtml(app)}
       ${state.tint !== 'kind' ? `<div class="lg-h">Coloring: ${esc(m.title)}</div><div class="lg-ramp"><span>few</span><i></i><span>many</span></div><div class="muted small">${esc(m.hint)}</div>` : ''}
     </details>`;
 }

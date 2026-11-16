@@ -90,6 +90,7 @@ export function facetKeysOf(paths: string[]): string[] {
         const doc = JSON.parse(readFileSync(path, 'utf8')) as ArchMapSpecDocument;
         for (const x of [...(doc.elements ?? []), ...(doc.edges ?? [])]) for (const k of Object.keys(x.facets ?? {})) keys.add(k);
         for (const g of doc.glyphs ?? []) keys.add(g.facet);
+        for (const st of doc.edgeStyles ?? []) keys.add(st.facet);
     }
     return [...keys].sort();
 }

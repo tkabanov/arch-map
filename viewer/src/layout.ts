@@ -95,8 +95,13 @@ function measure(n: ViewNode, expanded: Set<ElementId>): Size3 {
     const area = kids.reduce((a, k) => a + (k.s.w + GAP) * (k.s.d + GAP), 0);
     const target = Math.max(Math.sqrt(area) * 1.35, LEAF.w, ...kids.map((k) => k.s.w));
     let x = 0, z = 0, rowD = 0, maxW = 0;
+    // declared rows (spec 1.4) are kept whole: the board then wraps only where the row changes
+    const byRow = kids.some((k) => k.c.row !== undefined);
+    let row: number | undefined = kids[0]?.c.row;
     for (const k of kids) {
-        if (x > 0 && x + k.s.w > target) {
+        const newRow = k.c.row !== row;
+        row = k.c.row;
+        if (x > 0 && (newRow || (!byRow && x + k.s.w > target))) {
             z += rowD + GAP;
             x = 0;
             rowD = 0;

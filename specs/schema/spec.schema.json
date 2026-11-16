@@ -17,7 +17,7 @@
       "type": "string"
     },
     "schemaVersion": {
-      "description": "Semver of this schema; the viewer accepts major 1 only. 1.1 adds `tiers` and the element type `bus`; 1.2 adds the edge's `via`; 1.3 adds `glyphs`.",
+      "description": "Semver of this schema; the viewer accepts major 1 only. 1.1 adds `tiers` and the element type `bus`; 1.2 adds the edge's `via`; 1.3 adds `glyphs`; 1.4 adds the glyph's `tone`, the element's `order` and `row`, and `edgeStyles`.",
       "type": "string",
       "pattern": "^1\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
     },
@@ -58,6 +58,13 @@
       "type": "array",
       "items": {
         "$ref": "#/$defs/glyph"
+      }
+    },
+    "edgeStyles": {
+      "description": "Since 1.4. How the map draws relations that carry a facet, like `glyphs` for elements: the line's dash and a legend entry that shows or hides them. Ordered: a relation with several declared facets takes the first declaration of the merged set. A facet declared in two documents must be declared the same way.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/edgeStyle"
       }
     },
     "elements": {
@@ -171,6 +178,15 @@
           "description": "What the element is, in a few words (shown on the card and the panel).",
           "type": "string",
           "minLength": 1
+        },
+        "tone": {
+          "description": "Since 1.4. The color of the tile and its label, instead of the glyph's own: ok (green), warn (amber), bad (red), muted (grey, dimmed). The viewer maps each to its theme.",
+          "enum": [
+            "ok",
+            "warn",
+            "bad",
+            "muted"
+          ]
         }
       }
     },
@@ -527,6 +543,15 @@
             "medium",
             "low"
           ]
+        },
+        "order": {
+          "description": "Since 1.4. Where the element stands among its siblings on its parent's board: ascending; siblings without one follow, by name.",
+          "type": "number"
+        },
+        "row": {
+          "description": "Since 1.4. The row of its parent's board the element starts or stays on: a sibling with a different `row` than the one before it (in `order`) starts a new row. Without it, siblings are packed into rows by width.",
+          "type": "integer",
+          "minimum": 0
         },
         "methods": {
           "type": "array",
@@ -1011,6 +1036,39 @@
             "exclusiveMinimum": 0,
             "maximum": 120
           }
+        }
+      }
+    },
+    "edgeStyle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "facet",
+        "dash",
+        "role"
+      ],
+      "properties": {
+        "facet": {
+          "description": "A facet key, as in an edge's `facets`.",
+          "type": "string",
+          "pattern": "^[a-z0-9]+\\.[a-z0-9-]+$"
+        },
+        "dash": {
+          "description": "How the line is drawn.",
+          "enum": [
+            "solid",
+            "dashed",
+            "dotted"
+          ]
+        },
+        "role": {
+          "description": "What these relations are, in a few words (the legend's entry).",
+          "type": "string",
+          "minLength": 1
+        },
+        "planned": {
+          "description": "Relations not in the code yet: drawn faint, listed under Planned in the legend.",
+          "type": "boolean"
         }
       }
     }

@@ -11,13 +11,14 @@
 // - one tier list for the set: documents that declare `tiers` declare the same list, and every element's
 //   `tier` is one of them (default: core/tier.ts DEFAULT_TIERS);
 // - one glyph list for the set (AD-13): every document's `glyphs` in load order; a facet is declared once per
-//   document, and a facet declared in two documents is declared the same way (otherwise the first one is used).
+//   document, and a facet declared in two documents is declared the same way (otherwise the first one is used);
+// - one edge style list (1.4), by the same rule.
 //
 // strict (scripts): every problem is an error. Non-strict (viewer `?docs=` subsets): references to ids
 // that are not loaded are dropped with a warning instead; duplicates and claim conflicts stay errors.
 
 import type { MergedScenario, MergedSet, Problem, SpecEntry } from '../../../types/core.ts';
-import type { Edge, EdgeId, Element, ElementId, ElementType, Glyph, Tier } from '../../../types/spec.d.ts';
+import type { Edge, EdgeId, EdgeStyle, Element, ElementId, ElementType, Glyph, Tier } from '../../../types/spec.d.ts';
 import { DEFAULT_TIERS } from './tier.ts';
 
 const CLAIMABLE = new Set<ElementType>(['app', 'datastore']);
@@ -102,10 +103,30 @@ export function mergeSpecs(entries: SpecEntry[], { strict = true }: { strict?: b
             here.add(g.facet);
             const first = glyphs.find((x) => x.facet === g.facet);
             if (!first) {
-                glyphs.push({ facet: g.facet, shape: g.shape, role: g.role });
+                glyphs.push({ facet: g.facet, shape: g.shape, role: g.role, ...(g.tone ? { tone: g.tone } : {}) });
                 glyphDoc.set(g.facet, name);
-            } else if (first.shape !== g.shape || first.role !== g.role)
+            } else if (first.shape !== g.shape || first.role !== g.role || first.tone !== g.tone)
                 (strict ? error : warning)(name, undefined, `glyph of facet "${g.facet}" differs from the one in ${glyphDoc.get(g.facet)}${strict ? '' : ` (${glyphDoc.get(g.facet)}'s is used)`}`);
+        }
+    }
+
+    // ---- edge styles (1.4): the same rule as glyphs, for relations ----
+    const edgeStyles: EdgeStyle[] = [];
+    const styleDoc = new Map<string, string>();
+    for (const { name, doc } of entries) {
+        const here = new Set<string>();
+        for (const st of doc.edgeStyles ?? []) {
+            if (here.has(st.facet)) {
+                error(name, undefined, `facet "${st.facet}" declared twice in edgeStyles`);
+                continue;
+            }
+            here.add(st.facet);
+            const first = edgeStyles.find((x) => x.facet === st.facet);
+            if (!first) {
+                edgeStyles.push({ facet: st.facet, dash: st.dash, role: st.role, ...(st.planned ? { planned: true } : {}) });
+                styleDoc.set(st.facet, name);
+            } else if (first.dash !== st.dash || first.role !== st.role || !!first.planned !== !!st.planned)
+                (strict ? error : warning)(name, undefined, `edge style of facet "${st.facet}" differs from the one in ${styleDoc.get(st.facet)}${strict ? '' : ` (${styleDoc.get(st.facet)}'s is used)`}`);
         }
     }
 
@@ -246,5 +267,5 @@ export function mergeSpecs(entries: SpecEntry[], { strict = true }: { strict?: b
         }
     }
 
-    return { elements, edges, scenarios, envelopes, tiers, glyphs, byId, edgeById, docOf, edgeDocOf, errors, warnings };
+    return { elements, edges, scenarios, envelopes, tiers, glyphs, edgeStyles, byId, edgeById, docOf, edgeDocOf, errors, warnings };
 }

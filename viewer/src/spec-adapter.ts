@@ -5,7 +5,7 @@
 // `?nofacets=1` strips them here (browser boundary test).
 import { tierOf } from './core/tier.ts';
 import { effectiveAccess, effectiveContract } from './core/resolve.ts';
-import type { Channel, Element, ElementId, Facets, Glyph, MethodName, Repo, Source } from '../../types/spec.d.ts';
+import type { Channel, EdgeStyle, Element, ElementId, Facets, Glyph, MethodName, Repo, Source } from '../../types/spec.d.ts';
 import type { MergedSet, SpecEntry } from '../../types/core.ts';
 import type { AdaptedNode, RawModel, ViewEdge } from '../../types/viewer.ts';
 
@@ -50,10 +50,16 @@ const TYPE_SHAPE: Record<string, [string, string]> = {
  * Glyph and role of an element: the first of the merged set's `glyphs` whose facet the element carries (declared by
  * the stack that emits the facet — the viewer names no facet), the core type as fallback (AD-13).
  */
-export function shapeOf(el: Pick<Element, 'type' | 'facets' | 'derivedFrom'>, glyphs: readonly Glyph[] = []): { shape: string; role: string } {
-    if (el.facets) for (const g of glyphs) if (el.facets[g.facet]) return { shape: g.shape, role: g.role };
+export function shapeOf(el: Pick<Element, 'type' | 'facets' | 'derivedFrom'>, glyphs: readonly Glyph[] = []): { shape: string; role: string; tone?: Glyph['tone'] } {
+    if (el.facets) for (const g of glyphs) if (el.facets[g.facet]) return { shape: g.shape, role: g.role, ...(g.tone ? { tone: g.tone } : {}) };
     const [shape, role] = TYPE_SHAPE[el.type] ?? ['matrix', el.type];
     return { shape, role: el.type === 'module' && el.derivedFrom?.rule === 'folder' ? 'folder' : role };
+}
+
+/** The edge style (1.4) of a relation: the first of the merged set's `edgeStyles` whose facet it carries. */
+export function styleOf(facets: Facets | undefined, styles: readonly EdgeStyle[] = []): { style?: string; dash?: EdgeStyle['dash']; planned?: true } {
+    if (facets) for (const st of styles) if (facets[st.facet]) return { style: st.facet, dash: st.dash, ...(st.planned ? { planned: true } : {}) };
+    return {};
 }
 
 /** A clickable code link: fills the document's `blob` template (AD-5); null for config sources. */
@@ -87,13 +93,16 @@ export function adaptSpecs(merged: MergedSet, docs: SpecEntry[], { nofacets = fa
     for (const el of merged.elements) {
         if (el.type === 'endpoint') continue;
         const facets = facetsOf(el);
-        const { shape, role } = shapeOf({ ...el, facets }, merged.glyphs);
+        const { shape, role, tone } = shapeOf({ ...el, facets }, merged.glyphs);
         const n: AdaptedNode = {
             id: el.id,
             parent: el.parent ?? null,
             type: el.type,
             shape,
             role,
+            ...(tone ? { tone } : {}),
+            ...(el.order !== undefined ? { order: el.order } : {}),
+            ...(el.row !== undefined ? { row: el.row } : {}),
             layer: tierOf(merged, el.id),
             title: el.name,
             description: el.description,
@@ -165,6 +174,7 @@ export function adaptSpecs(merged: MergedSet, docs: SpecEntry[], { nofacets = fa
             via: (e.via ?? []).map(nodeOf),
             ...(ep ? { endpoint: ep.id } : {}),
             facets: facetsOf(e),
+            ...styleOf(facetsOf(e), merged.edgeStyles),
         });
         if (e.channel === 'call') {
             const m = deps.get(from) ?? deps.set(from, new Map()).get(from)!;
