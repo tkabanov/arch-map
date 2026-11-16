@@ -8,9 +8,6 @@ completely. Several maps can live on one page.
 
 ## Install
 
-> Not on npm yet. Until the first release, build it from a checkout of the repository and install the tarball:
-> `npm run lib:build && (cd packages/viewer && npm pack)`, then `npm install <path>/arch-map-viewer-1.0.0.tgz`.
-
 ```bash
 npm install @arch-map/viewer
 ```

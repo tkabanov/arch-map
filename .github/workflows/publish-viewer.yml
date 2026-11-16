@@ -1,8 +1,10 @@
 name: publish-viewer
 
-# Publishes @arch-map/viewer (packages/viewer) to npm when a tag viewer-v<version> is pushed, e.g. viewer-v1.0.1.
+# Stages @arch-map/viewer (packages/viewer) on npm when a tag viewer-v<version> is pushed, e.g. viewer-v1.0.1.
 # The tag must equal packages/viewer/package.json's version. No token: npm Trusted Publishing (OIDC) — on npmjs.com,
-# the package's Settings → Trusted publisher names this repository and this workflow file. Provenance comes with it.
+# the package's Settings → Trusted publisher names this repository, this workflow file and the environment `npm`, and
+# allows only `npm stage publish`. The version goes live after a maintainer approves it with 2FA: npmjs.com →
+# Staged Packages → Approve (or `npm stage approve <id>`). Provenance comes with it.
 on:
   push:
     tags: ['viewer-v*']
@@ -27,8 +29,8 @@ jobs:
           node-version: 22.18
           cache: npm
           registry-url: https://registry.npmjs.org
-      # Trusted Publishing needs npm 11.5.1 or later; Node 22 ships npm 10.
-      - run: npm install -g npm@11
+      # Staged publishing needs npm 11.15.0 or later; Node 22 ships npm 10.
+      - run: npm install -g npm@11.21.2
       - run: npm ci
       - name: The tag is the package version
         run: |
@@ -40,5 +42,5 @@ jobs:
       - run: npm run check:fast
       # Builds the package and checks it packs only what it should (prepack builds it again on publish).
       - run: npm run lib:pack
-      - run: npm publish --access public
+      - run: npm stage publish --access public
         working-directory: packages/viewer
