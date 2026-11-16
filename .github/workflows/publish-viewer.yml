@@ -1,0 +1,44 @@
+name: publish-viewer
+
+# Publishes @arch-map/viewer (packages/viewer) to npm when a tag viewer-v<version> is pushed, e.g. viewer-v1.0.1.
+# The tag must equal packages/viewer/package.json's version. No token: npm Trusted Publishing (OIDC) — on npmjs.com,
+# the package's Settings → Trusted publisher names this repository and this workflow file. Provenance comes with it.
+on:
+  push:
+    tags: ['viewer-v*']
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: publish-viewer
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: npm
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.18
+          cache: npm
+          registry-url: https://registry.npmjs.org
+      # Trusted Publishing needs npm 11.5.1 or later; Node 22 ships npm 10.
+      - run: npm install -g npm@11
+      - run: npm ci
+      - name: The tag is the package version
+        run: |
+          version=$(node -p "require('./packages/viewer/package.json').version")
+          if [ "viewer-v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "tag $GITHUB_REF_NAME does not match packages/viewer version $version" >&2
+            exit 1
+          fi
+      - run: npm run check:fast
+      # Builds the package and checks it packs only what it should (prepack builds it again on publish).
+      - run: npm run lib:pack
+      - run: npm publish --access public
+        working-directory: packages/viewer

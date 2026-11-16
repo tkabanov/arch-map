@@ -76,5 +76,14 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tkabanov/arch-map.git",
+    "directory": "packages/viewer"
+  },
+  "homepage": "https://tkabanov.github.io/arch-map",
+  "bugs": {
+    "url": "https://github.com/tkabanov/arch-map/issues"
   }
 }
