@@ -39,4 +39,12 @@ npm run check:determinism   # CI too: regenerates examples/; commit the specs if
 - A new technology: `docs/adding-a-stack.md`.
 - Embedding the map in a page: `docs/embedding.md`.
 
+## Releases (maintainers)
+
+- **arch-map:** bump `version` in `package.json`, add a section `## <version> — <date>` to `CHANGELOG.md`, push the
+  tag `v<version>`. `.github/workflows/release.yml` makes the GitHub release from that section.
+- **`@arch-map/viewer`:** bump `version` in `packages/viewer/package.json` (its major is the spec schema's), push the
+  tag `viewer-v<version>`. `.github/workflows/publish-viewer.yml` stages it on npm and makes the GitHub release; the
+  version goes live on npm once a maintainer approves it with 2FA in npmjs.com → Staged Packages.
+
 By contributing you agree that your contributions are licensed under the MIT License of this repository.

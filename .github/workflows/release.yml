@@ -1,0 +1,38 @@
+name: release
+
+# A GitHub release for each repository version tag v<version> (e.g. v0.0.2): its notes are the section
+# "## <version> — <date>" of CHANGELOG.md. The tag must equal package.json's version.
+# The package @arch-map/viewer has releases of its own (viewer-v*, publish-viewer.yml).
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Notes from CHANGELOG.md
+        run: |
+          version=${GITHUB_REF_NAME#v}
+          if [ "$(node -p "require('./package.json').version")" != "$version" ]; then
+            echo "tag $GITHUB_REF_NAME does not match package.json's version" >&2
+            exit 1
+          fi
+          awk -v v="$version" '
+            /^## / { if (found) exit; if ($2 == v) { found = 1; next } }
+            found { print }
+          ' CHANGELOG.md > notes.md
+          if ! grep -q '[^[:space:]]' notes.md; then
+            echo "CHANGELOG.md has no section ## $version" >&2
+            exit 1
+          fi
+          printf '\n**Live demo:** https://tkabanov.github.io/arch-map/\n' >> notes.md
+      - name: GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" --verify-tag --title "arch-map ${GITHUB_REF_NAME#v}" --notes-file notes.md

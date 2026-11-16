@@ -7,7 +7,8 @@ search, Scenarios, View and help, the 3D stage, the panel, the status line — i
 timer, animation frame and the WebGL context and leaves the element empty. Two maps on one page share nothing.
 
 The package lives in `packages/viewer/` (its `package.json` and README); `npm run lib:build` builds it,
-`npm run lib:pack` builds it and checks what `npm pack` would publish. It is not published to npm yet.
+`npm run lib:pack` builds it and checks what `npm pack` would publish. It is on npm: [`@arch-map/viewer`](https://www.npmjs.com/package/@arch-map/viewer).
+Releases go out from GitHub Actions on a `viewer-v<version>` tag (`.github/workflows/publish-viewer.yml`).
 
 ## Install
 

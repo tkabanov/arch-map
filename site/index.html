@@ -44,6 +44,7 @@
     .card h2 { margin: 0 0 8px; font-size: 16px; font-weight: 600; }
     .card p { margin: 0; color: var(--muted); font-size: 15px; }
     code { font: 14px var(--mono); color: #c9d7f2; }
+    a code { color: inherit; }
 
     .flow { margin: 32px 0 0; padding: 18px 22px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); color: var(--muted); font: 14px/1.9 var(--mono); overflow-x: auto; white-space: nowrap; }
     .flow b { color: var(--fg); font-weight: 500; }
@@ -124,7 +125,7 @@
         <div class="card">
           <h2>Specs are the interface</h2>
           <p>Plain JSON with a schema, validated and merged by the checks. Hand-written overlays add what code can't say:
-            actors, scenarios, envelopes. Embed the map anywhere with <code>@arch-map/viewer</code>.</p>
+            actors, scenarios, envelopes. Embed the map anywhere with <a href="https://www.npmjs.com/package/@arch-map/viewer"><code>@arch-map/viewer</code></a>.</p>
         </div>
       </div>
       <div class="flow">
@@ -154,13 +155,19 @@
         <p><a href="https://github.com/tkabanov/arch-map/blob/main/docs/adding-a-project.md">Adding a project</a> ·
           <a href="https://github.com/tkabanov/arch-map/blob/main/docs/adding-a-stack.md">Adding a stack</a> ·
           <a href="https://github.com/tkabanov/arch-map/blob/main/docs/embedding.md">Embedding the map</a></p>
+        <p>To show a map in a page of your own, install the viewer from npm:
+          <a href="https://www.npmjs.com/package/@arch-map/viewer"><code>@arch-map/viewer</code></a> — <code>mount()</code>, an
+          <code>&lt;arch-map&gt;</code> element, a React wrapper or a single script.</p>
       </div>
       <pre><code>git clone https://github.com/tkabanov/arch-map
 cd arch-map && npm ci
 npm run viewer            <span class="c"># http://localhost:4848</span>
 
 <span class="c"># generate a project's specs from its code</span>
-npm run gen -- &lt;project&gt;</code></pre>
+npm run gen -- &lt;project&gt;
+
+<span class="c"># embed the map in your own page</span>
+npm install @arch-map/viewer</code></pre>
     </section>
   </main>
 
@@ -169,6 +176,7 @@ npm run gen -- &lt;project&gt;</code></pre>
       <span>arch-map · MIT license</span>
       <a href="https://github.com/tkabanov/arch-map">Source</a>
       <a href="https://github.com/tkabanov/arch-map/releases">Releases</a>
+      <a href="https://www.npmjs.com/package/@arch-map/viewer">npm</a>
       <a href="https://github.com/tkabanov/arch-map/blob/main/LICENSE">License</a>
     </div>
   </footer>

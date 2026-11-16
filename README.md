@@ -52,7 +52,8 @@ pattern match, not a guarantee: review a snapshot before you commit or share it.
 
 ## The map in your own page
 
-The viewer is also a package, `@arch-map/viewer` (`packages/viewer/`, built with `npm run lib:build`): `mount(element,
+The viewer is also a package on npm, [`@arch-map/viewer`](https://www.npmjs.com/package/@arch-map/viewer) (`npm install @arch-map/viewer`; source in
+`packages/viewer/`, built with `npm run lib:build`): `mount(element,
 { specsUrl })` draws the whole map into that element's shadow root and `destroy()` removes it; a `<arch-map>` element
 and a React wrapper sit on top, and a single script (`arch-map.iife.js`, three.js bundled) works from a plain HTML page.
 The site itself is the package's first user (`viewer/src/site.ts`). Install, options and examples: `docs/embedding.md`.

@@ -10,7 +10,7 @@ on:
     tags: ['viewer-v*']
 
 permissions:
-  contents: read
+  contents: write   # the GitHub release of the tag
   id-token: write
 
 concurrency:
@@ -44,3 +44,19 @@ jobs:
       - run: npm run lib:pack
       - run: npm stage publish --access public
         working-directory: packages/viewer
+      # A GitHub release for the tag; its version reaches npm once it is approved in Staged Packages.
+      - name: GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=${GITHUB_REF_NAME#viewer-v}
+          gh release create "$GITHUB_REF_NAME" --verify-tag \
+            --title "@arch-map/viewer $version" \
+            --notes "npm: https://www.npmjs.com/package/@arch-map/viewer/v/$version
+
+          \`\`\`bash
+          npm install @arch-map/viewer@$version
+          \`\`\`
+
+          Usage: [docs/embedding.md](https://github.com/tkabanov/arch-map/blob/$GITHUB_REF_NAME/docs/embedding.md)" \
+            --generate-notes
