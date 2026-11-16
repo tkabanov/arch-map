@@ -76,3 +76,37 @@ export function wheelClassifier(): (e: { ctrlKey: boolean; deltaX: number }, now
         return now < panUntil ? 'pan' : 'zoom';
     };
 }
+
+/** Pinch deltaY per unit of ln(scale): Chrome's ctrlKey wheel for the same pinch, so both zoom alike. */
+export const GESTURE_DELTA = 100;
+
+/** The pinch converter for Safari: `start()` at gesturestart, `change(scale, t)` per gesturechange, `nativeWheel(t)` per trusted ctrlKey wheel. */
+export interface GesturePinch {
+    start: () => void;
+    change: (scale: number, now: number) => number;
+    nativeWheel: (now: number) => void;
+}
+
+/**
+ * Safari on macOS sends a trackpad pinch as WebKit `gesturestart` / `gesturechange` / `gestureend` with `scale`, the
+ * scale since the gesture began, and no ctrlKey wheel. `change(scale, t)` returns the ctrlKey wheel deltaY of that step:
+ * `-GESTURE_DELTA · ln(scale / previous scale)` (spreading the fingers zooms in, as a negative deltaY does), which then
+ * takes the pinch's own path (the ×10 boost, `pinchLimiter`, one level per gesture). A browser that sends the pinch as
+ * ctrlKey wheel events too is not zoomed twice: within `GESTURE_GAP` of a trusted ctrlKey wheel a step returns 0.
+ */
+export function gesturePinch(): GesturePinch {
+    let prev = 1;
+    let native = -Infinity;
+    return {
+        start: () => (prev = 1),
+        change: (scale, now) => {
+            if (!(scale > 0) || !Number.isFinite(scale)) return 0;
+            const r = scale / prev;
+            prev = scale;
+            if (now - native <= GESTURE_GAP) return 0;
+            const d = -GESTURE_DELTA * Math.log(r);
+            return Object.is(d, -0) ? 0 : d;
+        },
+        nativeWheel: (now) => (native = now),
+    };
+}

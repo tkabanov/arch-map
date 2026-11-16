@@ -172,6 +172,13 @@ a real double-click expansion followed by wheel zoom must resume the same semant
 `library.api.loans.loan_module`, reaches that module, then returns to the resting view. Every series must move
 **at most one level**, both in and out. The fixture has three navigable levels; no skipped level is permitted.
 
+`safari-pinch.test.ts` is the same walk as Safari sends it: WebKit `gesturestart` / `gesturechange` / `gestureend`
+with a cumulative `scale` (no ctrlKey wheel), built in the page and dispatched at the element under the point, twenty
+series of 25–60 events at 60 Hz, scale eased from 1 to 1.6–3.0 (in) or to its inverse (out). Same assertions; observed
+six level changes, at most one per series (**i1 i1 i1 i0 i0 i0 · o0 o1 o1 o1 o0 … o0**; the first in-series may
+land one later between runs). Playwright cannot make a real WebKit gesture, so a
+pinch on a real trackpad in Safari is still worth a look after changing `gesturePinch` (input.ts) or its wiring.
+
 ## Projects, facets and offline behavior
 
 `projects.test.ts` verifies the default task map, every switcher option, distinct models, clean project

@@ -132,7 +132,7 @@ map or `#v=tech`) opens every system at once.
   panel it also returns to the map); Shift + arrows pan, + / − zoom as the wheel; Tab goes on to the panel. With a
   scenario open ← → step it and ↑ ↓ still select.
 - **Trackpad**: pinch — zoom to the cursor with the same thresholds as the wheel (one gesture never falls through a
-  level) and never zooms the page itself; a sideways two-finger swipe pans the map; a purely vertical two-finger
+  level) and never zooms the page itself — in Chrome and Firefox (ctrlKey wheel) and in Safari (gesture events); a sideways two-finger swipe pans the map; a purely vertical two-finger
   scroll cannot be told from the wheel — it zooms, pan by dragging then.
 - **Hover** a block or its name — a card: what it is, its callers and calls, endpoints, tables, targets and calls (the
   same figures and words as the panel); on a relation — its envelopes. The card stands beside its block and its name, on

@@ -1,6 +1,6 @@
 // The pointer and the screen geometry: what is under a point, where a block is on screen, the «go inside» ring.
 import * as THREE from 'three';
-import { wheelClassifier } from './input.ts';
+import { gesturePinch, wheelClassifier } from './input.ts';
 import { later, cancel } from './dom.ts';
 import type { MapScene } from './scene.ts';
 import type { NodeView, PickEvent } from './scene-types.ts';
@@ -24,6 +24,9 @@ export function rehover(scene: MapScene): void {
     scene.handlers.hover(hit, at);
     scene.labels.domElement.style.cursor = hit ? 'pointer' : 'grab';
 }
+
+/** WebKit's GestureEvent (Safari), absent from the DOM typings: `scale` is since gesturestart. */
+type GestureLike = Event & { scale: number; clientX: number; clientY: number };
 
 export function bindPointer(scene: MapScene): void {
     const el = scene.labels.domElement;
@@ -66,8 +69,10 @@ export function bindPointer(scene: MapScene): void {
     // two-finger pan can stop the zoom. Zoom and pinch: remember where and which way; the frame loop asks the app
     // while the camera moves.
     const classify = wheelClassifier();
+    const gesture = gesturePinch();
     el.addEventListener('wheel', (e) => {
         const now = performance.now();
+        if (e.ctrlKey && e.isTrusted) gesture.nativeWheel(e.timeStamp); // the browser sends the pinch as wheel itself
         const kind = classify(e, e.timeStamp, scene.controls._controlActive);
         // a pinch (ctrlKey wheel) never zooms the page, whatever the map does with it: the rest of a gesture that
         // changed level, a pinch while dragging, during a flight
@@ -86,6 +91,15 @@ export function bindPointer(scene: MapScene): void {
         if (scene.cam) e.preventDefault();
         if (e.deltaY !== 0) scene.lastWheel = { t: now, dir: e.deltaY < 0 ? 'in' : 'out', x: e.clientX, y: e.clientY };
     }, { passive: false, capture: true, signal: scene.signal });
+    // Safari's pinch (WebKit gesture events, no ctrlKey wheel): each step becomes the ctrlKey wheel Chrome would send,
+    // dispatched here so it takes the pinch's path above and in the controls, toward the fingers (input.ts gesturePinch)
+    el.addEventListener('gesturestart', (e) => (e.preventDefault(), gesture.start()), { passive: false, signal: scene.signal });
+    el.addEventListener('gesturechange', (e) => {
+        e.preventDefault();
+        const g = e as GestureLike;
+        const deltaY = gesture.change(g.scale, e.timeStamp);
+        if (deltaY) el.dispatchEvent(new WheelEvent('wheel', { deltaY, deltaMode: 0, ctrlKey: true, clientX: g.clientX, clientY: g.clientY, bubbles: true, cancelable: true, composed: true }));
+    }, { passive: false, signal: scene.signal });
     el.addEventListener('click', (e) => {
         if (down && Math.hypot(e.clientX - down.x, e.clientY - down.y) > 5) return;
         scene.handlers.click(pick(scene, { clientX: e.clientX, clientY: e.clientY, target: down?.target ?? e.target }), { x: e.clientX, y: e.clientY, touch: !!down?.touch });

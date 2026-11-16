@@ -3,7 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
-import { pinchLimiter, wheelClassifier, NOTCH, PINCH_WINDOW, PAN_LATCH, GESTURE_GAP } from '../viewer/src/input.ts';
+import { pinchLimiter, wheelClassifier, gesturePinch, NOTCH, PINCH_WINDOW, PAN_LATCH, GESTURE_GAP, GESTURE_DELTA } from '../viewer/src/input.ts';
 
 test('pinch: one event never exceeds one notch, either way', () => {
     const limit = pinchLimiter();
@@ -86,4 +86,49 @@ test('pinch: a held gesture stays held while its events keep coming, however lon
     for (let t = 16; t <= 1000; t += 16) assert.equal(limit.held(t), true, `t=${t}`);
     assert.equal(limit.held(1000 + GESTURE_GAP + 1), false); // the gesture ended
     assert.equal(limit(-40, 1000 + GESTURE_GAP + 2), -40); // the next one zooms
+});
+
+test('Safari pinch: each gesturechange step is the ln of its scale ratio, spreading zooms in', () => {
+    const g = gesturePinch();
+    g.start();
+    const near = (a: number, b: number) => assert.ok(Math.abs(a - b) < 1e-9, `${a} ≈ ${b}`);
+    near(g.change(1.05, 0), -GESTURE_DELTA * Math.log(1.05)); // in: negative deltaY, like a wheel up
+    near(g.change(1.10, 16), -GESTURE_DELTA * Math.log(1.10 / 1.05)); // relative to the previous step, not to 1
+    near(g.change(1.0, 32), -GESTURE_DELTA * Math.log(1.0 / 1.10)); // back: out, positive
+    assert.ok(g.change(0.9, 48) > 0);
+    assert.equal(g.change(0.9, 64), 0); // no change, no zoom
+});
+
+test('Safari pinch: the steps of one gesture add up to ln of its final scale; a new gesture starts from 1', () => {
+    const g = gesturePinch();
+    g.start();
+    let sum = 0;
+    for (const s of [1.02, 1.07, 1.15, 1.3, 1.5]) sum += g.change(s, 0);
+    assert.ok(Math.abs(sum + GESTURE_DELTA * Math.log(1.5)) < 1e-9);
+    g.start();
+    assert.ok(Math.abs(g.change(0.8, 1000) + GESTURE_DELTA * Math.log(0.8)) < 1e-9);
+});
+
+test('Safari pinch: bad scales never zoom', () => {
+    const g = gesturePinch();
+    g.start();
+    for (const s of [0, -1, NaN, Infinity]) assert.equal(g.change(s, 0), 0);
+    assert.ok(g.change(1.1, 16) < 0); // and do not break the next step
+});
+
+test('Safari pinch: no double zoom when the browser also sends the pinch as ctrlKey wheel', () => {
+    const g = gesturePinch();
+    g.start();
+    g.nativeWheel(100);
+    assert.equal(g.change(1.2, 100 + GESTURE_GAP), 0);
+    assert.ok(g.change(1.4, 101 + GESTURE_GAP * 2) < 0); // the native wheel stopped: the gesture zooms again
+});
+
+test('Safari pinch: a typical gesture fed through the limiter moves like a Chrome pinch (≤ one notch per window)', () => {
+    const g = gesturePinch();
+    const limit = pinchLimiter();
+    g.start();
+    let used = 0;
+    for (let k = 1; k <= 6; k++) used += Math.abs(limit(10 * g.change(1 + 0.04 * k, k * 16), k * 16)); // ×10: the controls' pinch boost
+    assert.ok(used > 0 && used <= NOTCH);
 });

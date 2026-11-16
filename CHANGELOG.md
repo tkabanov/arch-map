@@ -1,5 +1,10 @@
 # Changelog
 
+## @arch-map/viewer 1.0.2 — 2026-11-16
+
+- Trackpad pinch zooms the map in Safari: WebKit's gesture events become the same pinch as Chrome's ctrlKey wheel
+  (same limiter, one focus level per gesture, toward the fingers); a browser sending both is not zoomed twice.
+
 ## 0.0.1 — 2026-11-14
 
 First public release.
